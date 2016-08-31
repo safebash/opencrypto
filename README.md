@@ -99,6 +99,4 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 
 
 ## License
-Copyright 2016 Peter Bielak
-
-Licensed under the MIT license.
+Copyright 2016 Peter Bielak<br>Licensed under the MIT license.
