@@ -5,9 +5,23 @@
 OpenCrypto is a JavaScript library built on top of WebCrypto API that helps you smoothly implement
 crypto features into your web app including various encoding types.
 
+## Code Usage
+### Load OpenCrypto into your web app
+```javascript
+<script type="text/javascript" src="OpenCrypto.js"></script>
+```
+### Generate asymmetric key pair
+```javascript
+var crypt = new OpenCrypto();
+
+crypt.getKeyPair().then(function(keyPair) {
+    console.log(keyPair.publicKey);
+    console.log(keyPair.privateKey);
+});
+```
 
 
-# License
+## License
 Copyright 2016 Peter Bielak
 
 Licensed under the MIT license.
