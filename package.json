@@ -1,0 +1,28 @@
+{
+  "name": "OpenCrypto",
+  "version": "1.0.0",
+  "description": "JavaScript Crypto Library built on top of WebCrypto API",
+  "main": "OpenCrypto.js",
+  "author": "PeterBielak",
+  "keywords": [
+    "encryption",
+    "high-level",
+    "crypto"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/PeterBielak/OpenCrypto.git"
+    },
+    "scripts": {
+      "test": "make test",
+      "jsdoc": "jsdoc -c jsdoc.conf.json",
+      "lint": "eslint . || true"
+    },
+    "engines": {
+      "node": "*"
+    },
+    "devDependencies": {
+      "eslint": "^2.11.1",
+      "jsdoc": "3.4.0"
+    }
+}
