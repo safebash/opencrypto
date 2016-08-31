@@ -1,6 +1,6 @@
 {
   "name": "OpenCrypto",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Browser JavaScript Crypto Library built on top of WebCrypto API",
   "keywords": [
     "encryption",
@@ -25,7 +25,7 @@
     "name": "Peter Bielak",
     "web": "https://github.com/PeterBielak"
   },
-  "main": "./src/OpenCrypto.js",
+  "main": "./lib/OpenCrypto.js",
   "scripts": {
     "test": "grunt test"
   },
