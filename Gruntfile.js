@@ -9,14 +9,6 @@ module.exports = function (grunt) {
 		},
 		qunit: {
 			all: ['test/index.html']
-		},
-		coveralls: {
-			options: {
-				force: false
-			},
-			your_target: {
-				src: 'coverage-results/extra-results-*.info',
-			}
 		}
 	});
 
