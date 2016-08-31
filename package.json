@@ -27,7 +27,7 @@
   },
   "main": "./src/OpenCrypto.js",
   "scripts": {
-    "test": "grunt test && node test/node-index.js"
+    "test": "grunt test"
   },
   "dependencies": {},
   "devDependencies": {
