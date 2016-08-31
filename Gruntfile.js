@@ -1,7 +1,6 @@
 module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
-	grunt.loadNpmTasks('grunt-coveralls');
 
 	grunt.initConfig({
 		jshint: {
