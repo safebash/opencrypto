@@ -1,28 +1,36 @@
 {
-  "name": "OpenCrypto",
-  "version": "1.0.0",
-  "description": "JavaScript Crypto Library built on top of WebCrypto API",
-  "main": "OpenCrypto.js",
-  "author": "PeterBielak",
+  "name": "mylib",
+  "version": "0.0.3",
+  "description": "My First Library.",
   "keywords": [
-    "encryption",
-    "high-level",
-    "crypto"
-    ],
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/PeterBielak/OpenCrypto.git"
-    },
-    "scripts": {
-      "test": "make test",
-      "jsdoc": "jsdoc -c jsdoc.conf.json",
-      "lint": "eslint . || true"
-    },
-    "engines": {
-      "node": "*"
-    },
-    "devDependencies": {
-      "eslint": "^2.11.1",
-      "jsdoc": "3.4.0"
+    "library"
+  ],
+  "homepage": "http://example.org/mylib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/JohnDoe/node-mylib.git"
+  },
+  "bugs": "https://github.com/JohnDoe/node-mylib/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://mit-license.org/"
     }
+  ],
+  "author": {
+    "name": "John Doe",
+    "web": "https://github.com/JohnDoe"
+  },
+  "main": "./src/MyLib.js",
+  "scripts": {
+    "test": "grunt test && node test/node-index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "qunit": "~0.5.15",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-qunit": "~0.2.1",
+    "qunitjs": "~1.11.0"
+  }
 }
