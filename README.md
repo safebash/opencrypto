@@ -1,5 +1,5 @@
 # OpenCrypto
-<img src="https://img.shields.io/wercker/ci/wercker/docs.svg" alt="Build">
+[![Build Status](https://travis-ci.org/bitwiseshiftleft/sjcl.png)](https://travis-ci.org/bitwiseshiftleft/sjcl)
 [![Coverage Status](https://coveralls.io/repos/github/PeterBielak/OpenCrypto/badge.svg?branch=master)](https://coveralls.io/github/PeterBielak/OpenCrypto?branch=master)
 <a href="https://en.wikipedia.org/wiki/MIT_License"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="License"></a>
 
