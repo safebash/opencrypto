@@ -98,11 +98,11 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 ```
 
 ## Standards Compliance
-RFC 5208 PKCS #8 Public-Key Cryptography Standards: Private-Key Information Syntax Specification Version 1.2
-RFC 2898 PKCS #5 Password-Based Cryptography Specification Version 2.0
-RFC 5280 Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile
-RFC 3279 Algorithms and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile
-NIST SP 800-38D AES-GCM
+RFC 5208 PKCS #8 Public-Key Cryptography Standards: Private-Key Information Syntax Specification Version 1.2<br>
+RFC 2898 PKCS #5 Password-Based Cryptography Specification Version 2.0<br>
+RFC 5280 Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile<br>
+RFC 3279 Algorithms and Identifiers for the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile<br>
+NIST SP 800-38D AES-GCM<br>
 NIST SP 800-38A AES-CBC
 
 
