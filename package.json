@@ -1,16 +1,20 @@
 {
-  "name": "mylib",
+  "name": "OpenCrypto",
   "version": "0.0.3",
-  "description": "My First Library.",
+  "description": "Browser JavaScript Crypto Library built on top of WebCrypto API",
   "keywords": [
-    "library"
+    "encryption",
+    "crypto",
+    "aes",
+    "rsa",
+    "browser"
   ],
-  "homepage": "http://example.org/mylib",
+  "homepage": "https://github.com/PeterBielak/OpenCrypto",
   "repository": {
     "type": "git",
-    "url": "git://github.com/JohnDoe/node-mylib.git"
+    "url": "git://github.com/PeterBielak/OpenCrypto.git"
   },
-  "bugs": "https://github.com/JohnDoe/node-mylib/issues",
+  "bugs": "https://github.com/PeterBielak/OpenCrypto/issues",
   "licenses": [
     {
       "type": "MIT",
@@ -18,10 +22,10 @@
     }
   ],
   "author": {
-    "name": "John Doe",
-    "web": "https://github.com/JohnDoe"
+    "name": "Peter Bielak",
+    "web": "https://github.com/PeterBielak"
   },
-  "main": "./src/MyLib.js",
+  "main": "./src/OpenCrypto.js",
   "scripts": {
     "test": "grunt test && node test/node-index.js"
   },
