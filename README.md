@@ -1,7 +1,8 @@
 # OpenCrypto
 [![Build Status](https://travis-ci.org/PeterBielak/OpenCrypto.svg?branch=master)](https://travis-ci.org/PeterBielak/OpenCrypto)
 [![Coverage Status](https://coveralls.io/repos/github/PeterBielak/OpenCrypto/badge.svg?branch=master)](https://coveralls.io/github/PeterBielak/OpenCrypto?branch=master)
-<a href="https://en.wikipedia.org/wiki/MIT_License"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="License"></a>
+<a href="http://mit-license.org"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="License"></a>
+| [<img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/edge.png" alt="IE / Edge" width="16px" height="16px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/firefox.png" alt="Firefox" width="16px" height="16px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | 
 
 OpenCrypto is a Cryptographic JavaScript library built on top of WebCrypto API
 
