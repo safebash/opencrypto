@@ -98,12 +98,12 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 ```
 
 ## Standards Compliance
-[RFC 5208](http://tools.ietf.org/html/rfc5208#section-6)<br>
+[RFC 5208](http://tools.ietf.org/html/rfc5208)<br>
 [RFC 2898](http://tools.ietf.org/html/rfc2898)<br>
 [RFC 5280](http://tools.ietf.org/html/rfc5280)<br>
 [RFC 3279](http://tools.ietf.org/html/rfc3279)<br>
-[NIST SP 800-38D](http://tools.ietf.org/html/rfc4648#section-6)<br>
-[NIST SP 800-38A](http://tools.ietf.org/html/rfc4648#section-6)
+[NIST SP 800-38D](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)<br>
+[NIST SP 800-38A](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf)
 
 ## License
 Copyright 2016 Peter Bielak<br>Licensed under the MIT license.
