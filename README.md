@@ -106,4 +106,5 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 [NIST SP 800-38A](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf)
 
 ## License
-Copyright 2016 Peter Bielak<br>Licensed under the MIT license.
+Copyright 2016 Peter Bielak<br>Licensed under the MIT license.<br>
+Cryptographic Consultancy Andrew Kozlik, Ph.D.
