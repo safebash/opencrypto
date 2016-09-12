@@ -107,7 +107,7 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 
 ## Contributors
 Peter Bielak<br>
-Andrew Kozlik, Ph.D. Cryptographic Consultancy
+Andrew Kozlik, Ph.D. (Cryptography Consultancy)
 
 ## License
 MIT
