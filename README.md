@@ -1,5 +1,5 @@
 # OpenCrypto
-[![Build Status](https://travis-ci.org/PeterBielak/OpenCrypto.svg?branch=master)](https://travis-ci.org/PeterBielak/OpenCrypto)
+[![Build Status](https://travis-ci.org/safebash/OpenCrypto.svg?branch=master)](https://travis-ci.org/PeterBielak/OpenCrypto)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/PeterBielak/OpenCrypto/master/LICENSE.md)
 
 OpenCrypto is a JavaScript library built on top of WebCryptography API that helps you smoothly implement
