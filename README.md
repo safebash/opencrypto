@@ -43,13 +43,13 @@ crypt.pemPrivateToCrypto(privatePem).then(function(cryptoPrivate) {
 });
 
 // Encrypt CryptoKey of type private into PEM Encrypted Private Key
-crypt.encryptPrivateKey(cryptoPrivate, 'securepassword').then(function(encryptedPrivateKey) {
+crypt.encryptPrivateKey(cryptoPrivate, 'securepassphrase').then(function(encryptedPrivateKey) {
     // This PEM Encrypted Private Key is fully compatiable with OpenSSL
     console.log(encryptedPrivateKey);
 });
 
 // Decrypt PEM Encrypted Private Key
-crypt.decryptPrivateKey(encryptedPrivateKey).then(function(decryptedPrivateKey) {
+crypt.decryptPrivateKey(encryptedPrivateKey, 'securepassphrase').then(function(decryptedPrivateKey) {
     console.log(decryptedPrivateKey);
 });
 
