@@ -103,6 +103,7 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 [RFC 3394](https://tools.ietf.org/html/rfc3394)<br>
 [RFC 5480](https://tools.ietf.org/html/rfc5480)<br>
 [RFC 5915](https://tools.ietf.org/html/rfc5915)<br>
+[RFC 6090](https://tools.ietf.org/html/rfc6090)<br>
 [NIST SP 800-38D](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf)<br>
 [NIST SP 800-38A](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf)
 
