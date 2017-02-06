@@ -1,0 +1,38 @@
+{
+    "name": "OpenCrypto",
+    "version": "1.0.0",
+    "description": "Browser JavaScript Crypto Library built on top of WebCrypto API",
+    "keywords": [
+        "encryption",
+        "crypto",
+        "aes",
+        "rsa",
+        "browser"
+    ],
+    "homepage": "https://github.com/safebash/OpenCrypto",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/safebash/OpenCrypto.git"
+    },
+    "bugs": "https://github.com/safebash/OpenCrypto/issues",
+    "licenses": [{
+        "type": "MIT",
+        "url": "http://mit-license.org/"
+    }],
+    "author": {
+        "name": "Peter Bielak",
+        "web": "https://github.com/PeterBielak"
+    },
+    "main": "./lib/OpenCrypto.js",
+    "scripts": {
+        "test": "grunt test"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "qunit": "~0.9.1",
+        "grunt-contrib-jshint": "~1.1.0",
+        "grunt-contrib-qunit": "~1.2.0",
+        "qunitjs": "~2.1.1"
+        }
+    }
+}
