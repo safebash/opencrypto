@@ -31,9 +31,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "qunit": "~0.5.15",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-contrib-qunit": "~0.2.1",
-    "qunitjs": "~1.11.0"
+    "qunit": "~2.1.1",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-qunit": "~1.2.0",
+    "qunitjs": "~2.1.1"
   }
 }
