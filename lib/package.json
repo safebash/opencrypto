@@ -25,11 +25,12 @@
     },
     "main": "./lib/OpenCrypto.js",
     "scripts": {
-        "test": "grunt test"
+        "grunt-test": "grunt test",
+        "test": "npm run grunt-test"
     },
     "dependencies": {},
     "devDependencies": {
-        "grunt": "~1.2.0",
+        "grunt-cli": "~1.2.0",
         "grunt-contrib-jshint": "~1.1.0",
         "grunt-contrib-qunit": "~1.2.0"
     }
