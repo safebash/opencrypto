@@ -13,8 +13,7 @@
       "load-grunt-config": "^0.10",
       "load-grunt-tasks": "^0.6",
       "qunitjs": "^1.14.0",
-      "time-grunt": "^0.3",
-      "promise": "^7.1.1"
+      "time-grunt": "^0.3"
   },
   "repository": {
       "type": "git",
