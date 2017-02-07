@@ -1,0 +1,26 @@
+{
+  "name": "opencrypto",
+  "version": "1.0.0",
+  "description": "Crypto Unit Tests",
+  "main": "test/index.html",
+  "dependencies": {
+      "grunt": "^0.4"
+  },
+  "devDependencies": {
+      "grunt-contrib-connect": "^0.8",
+      "grunt-contrib-qunit": "^0.5",
+      "jquery": "^2.1.1",
+      "load-grunt-config": "^0.10",
+      "load-grunt-tasks": "^0.6",
+      "qunitjs": "^1.14.0",
+      "time-grunt": "^0.3"
+  },
+  "repository": {
+      "type": "git",
+      "url": "git://github.com/safebash/opencrypto.git"
+  },
+  "author": "Peter Bielak",
+  "scripts": {
+      "test": "grunt test --verbose"
+  }
+}
