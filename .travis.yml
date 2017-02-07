@@ -2,5 +2,6 @@ language: node_js
 node_js:
   - "6.9.5"
 before_script:
-  - npm install -g grunt-cli
-  - npm install es6-promise
+  - npm install -g grunt
+  
+script: grunt test --verbose --force
