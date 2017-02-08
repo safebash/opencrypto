@@ -2,8 +2,7 @@
 [![Build Status](https://travis-ci.org/safebash/OpenCrypto.svg?branch=master)](https://travis-ci.org/safebash/OpenCrypto)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/OpenCrypto/master/LICENSE.md)
 
-OpenCrypto is a JavaScript library built on top of WebCryptography API that helps you smoothly implement
-crypto features into your secure web app. This library performs all of its crypto functions using WebCryptography API only.
+OpenCrypto is a JavaScript library built on top of WebCryptography API. Purpose of this library is to make it easier for developer to implement cryptographic functions with less code without the need to deal with ASN.1, PEM and other formats manually.
 
 ## Code Usage
 ### Load OpenCrypto into your web app
