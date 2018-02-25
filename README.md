@@ -97,8 +97,8 @@ crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(de
 ```
 
 ## Standards Compliance
-[RFC 5208](https://tools.ietf.org/html/rfc5208)<br>
-[RFC 2898](https://tools.ietf.org/html/rfc2898)<br>
+[RFC 5958](https://tools.ietf.org/html/rfc5958)<br>
+[RFC 8018](https://tools.ietf.org/html/rfc8018)<br>
 [RFC 3394](https://tools.ietf.org/html/rfc3394)<br>
 [RFC 5480](https://tools.ietf.org/html/rfc5480)<br>
 [RFC 5915](https://tools.ietf.org/html/rfc5915)<br>
