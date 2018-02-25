@@ -8,10 +8,10 @@ sudo: required
 addons:
   chrome: stable # have Travis install chrome stable.
 cache:
-  npm: true
+  yarn: true
   directories:
     - node_modules
 install:
-  - npm
+  - yarn
 script:
-  - npm test
+  - yarn test
