@@ -1,7 +1,7 @@
 module.exports = function(config) {
     config.set({
         frameworks: ['mocha', 'chai'],
-        files: ['lib/OpenCrypto.min.js', 'test/**/*.js'],
+        files: ['dist/OpenCrypto.min.js', 'test/**/*.js'],
         reporters: ['progress'],
         port: 9876,  // karma web server port
         colors: true,
