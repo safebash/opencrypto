@@ -1,6 +1,6 @@
 {
   "name": "opencrypto",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "WebCrypto API library",
   "main": "dist/OpenCrypto.min.js",
   "repository": {
