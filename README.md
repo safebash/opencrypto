@@ -1,5 +1,5 @@
 # OpenCrypto
-[![Build Status](https://travis-ci.org/safebash/OpenCrypto.svg?branch=master)](https://travis-ci.org/safebash/OpenCrypto)
+[![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/OpenCrypto)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/OpenCrypto/master/LICENSE.md)
 
 OpenCrypto is a lightweight JavaScript library built on top of WebCryptography API. The purpose of this library is to make it easier for a developer to implement cryptography in the browser with less code and without having to deal with ASN.1, PEM or other formats manually.
@@ -7,92 +7,92 @@ OpenCrypto is a lightweight JavaScript library built on top of WebCryptography A
 ## Code Usage
 ### Load OpenCrypto into your web app
 ```javascript
-<script type="text/javascript" src="OpenCrypto.js"></script>
+<script type="text/javascript" src="OpenCrypto.min.js"></script>
 ```
 ### Examples
 ```javascript
 // Initialize new OpenCrypto instance
-var crypt = new OpenCrypto();
+const crypto = new OpenCrypto()
 
 // Asymmetric Encryption (RSA)
 // Generate asymmetric key pair
-crypt.getKeyPair().then(function(keyPair) {
-    console.log(keyPair.publicKey);
-    console.log(keyPair.privateKey);
-});
+crypto.getKeyPair().then(function (keyPair) {
+  console.log(keyPair.publicKey)
+  console.log(keyPair.privateKey)
+})
 
 // Convert CryptoKey of type public to PEM
-crypt.cryptoPublicToPem(keyPair.publicKey).then(function(publicPem) {
-    console.log(publicPem);
-});
+crypto.cryptoPublicToPem(keyPair.publicKey).then(function (publicPem) {
+  console.log(publicPem)
+})
 
 // Convert CryptoKey of type private to PEM
-crypt.cryptoPrivateToPem(keyPair.privateKey).then(function(privatePem) {
-    console.log(privatePem);
-});
+crypto.cryptoPrivateToPem(keyPair.privateKey).then(function (privatePem) {
+  console.log(privatePem)
+})
 
 // Convert PEM public key to CryptoKey
-crypt.pemPublicToCrypto(publicPem).then(function(cryptoPublic) {
-    console.log(cryptoPublic);
-});
+crypto.pemPublicToCrypto(publicPem).then(function (cryptoPublic) {
+  console.log(cryptoPublic)
+})
 
 // Convert PEM private key to CryptoKey
-crypt.pemPrivateToCrypto(privatePem).then(function(cryptoPrivate) {
-    console.log(cryptoPrivate);
-});
+crypto.pemPrivateToCrypto(privatePem).then(function (cryptoPrivate) {
+  console.log(cryptoPrivate)
+})
 
 // Encrypt CryptoKey of type private into PEM Encrypted Private Key
-crypt.encryptPrivateKey(cryptoPrivate, 'securepassphrase').then(function(encryptedPrivateKey) {
-    // This PEM Encrypted Private Key is fully compatiable with OpenSSL
-    console.log(encryptedPrivateKey);
-});
+crypto.encryptPrivateKey(cryptoPrivate, 'securepassphrase').then(function (encryptedPrivateKey) {
+  // This PEM Encrypted Private Key is fully compatiable with OpenSSL
+  console.log(encryptedPrivateKey)
+})
 
 // Decrypt PEM Encrypted Private Key
-crypt.decryptPrivateKey(encryptedPrivateKey, 'securepassphrase').then(function(decryptedPrivateKey) {
-    console.log(decryptedPrivateKey);
-});
+crypto.decryptPrivateKey(encryptedPrivateKey, 'securepassphrase').then(function (decryptedPrivateKey) {
+  console.log(decryptedPrivateKey)
+})
 
 // Encrypt data using public key
-crypt.encryptPublic(publicKey, data).then(function(encryptedDataAsymmetric) {
-    console.log(encryptedDataAsymmetric);
-});
+crypto.encryptPublic(publicKey, data).then(function (encryptedDataAsymmetric) {
+  console.log(encryptedDataAsymmetric)
+})
 
 // Decrypt data using private key
-crypt.decryptPrivate(privateKey, encryptedDataAsymmetric).then(function(decryptedDataAsymmetric) {
-    console.log(decryptedDataAsymmetric);
-});
+crypto.decryptPrivate(privateKey, encryptedDataAsymmetric).then(function (decryptedDataAsymmetric) {
+  console.log(decryptedDataAsymmetric)
+})
 
 // Encrypt session key
-crypt.encryptKey(publicKey, sessionKey).then(function(encryptedSessionKey) {
-    console.log(encryptedSessionKey);
-});
+crypto.encryptKey(publicKey, sessionKey).then(function (encryptedSessionKey) {
+  console.log(encryptedSessionKey)
+})
 
 // Decrypt session key
-crypt.sessionKey(privateKey, encryptedSessionKey).then(function(decryptedSessionKey) {
-    console.log(decryptedSessionKey);
-});
+crypto.sessionKey(privateKey, encryptedSessionKey).then(function (decryptedSessionKey) {
+  console.log(decryptedSessionKey)
+})
 
 // Symmetric Encryption (AES)
 // Generate new symmetric / session Key
-crypt.getSessionKey().then(function(sessionKey) {
-    console.log(sessionKey);
-});
+crypto.getSharedKey().then(function (sharedKey) {
+  console.log(sharedKey)
+})
 
-// Encrypt data using session key
-crypt.encrypt(sessionKey, data).then(function(encryptedData) {
-    console.log(encryptedData);
-});
+// Encrypt data using shared key
+crypto.encrypt(sharedKey, data).then(function (encryptedData) {
+  console.log(encryptedData)
+})
 
-// Decrypt data using session key
-crypt.decrypt(sessionKey, encryptedData).then(function(decryptedData) {
-    console.log(decryptedData);
-});
+// Decrypt data using shared key
+crypto.decrypt(sharedKey, encryptedData).then(function (decryptedData) {
+  console.log(decryptedData)
+})
 
 // Other Crypto Features
 // Derive key from passphrase
-crypt.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function(derivedKey) {
-    console.log(derivedKey);
-});
+crypto.keyFromPassphrase('securepassword', 'uniquesalt', 300000).then(function (derivedKey) {
+  console.log(derivedKey)
+})
 
 ```
 
