@@ -1,6 +1,6 @@
 # OpenCrypto
-[![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/OpenCrypto)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/OpenCrypto/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/opencrypto)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
 
 OpenCrypto is a lightweight JavaScript library built on top of WebCryptography API. The purpose of this library is to make it easier for a developer to implement cryptography in the browser with less code and without having to deal with ASN.1, PEM or other formats manually.
 
@@ -62,18 +62,18 @@ crypto.decryptPrivate(privateKey, encryptedDataAsymmetric).then(function (decryp
   console.log(decryptedDataAsymmetric)
 })
 
-// Encrypt session key
-crypto.encryptKey(publicKey, sessionKey).then(function (encryptedSessionKey) {
-  console.log(encryptedSessionKey)
+// Encrypt shared key
+crypto.encryptKey(publicKey, sharedKey).then(function (encryptedSharedKey) {
+  console.log(encryptedSharedKey)
 })
 
-// Decrypt session key
-crypto.sessionKey(privateKey, encryptedSessionKey).then(function (decryptedSessionKey) {
-  console.log(decryptedSessionKey)
+// Decrypt shared key
+crypto.decryptKey(privateKey, encryptedSharedKey).then(function (decryptedSharedKey) {
+  console.log(decryptedSharedKey)
 })
 
 // Symmetric Encryption (AES)
-// Generate new symmetric / session Key
+// Generate new symmetric / shared Key
 crypto.getSharedKey().then(function (sharedKey) {
   console.log(sharedKey)
 })
