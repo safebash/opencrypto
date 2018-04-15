@@ -1,4 +1,5 @@
 # OpenCrypto
+[![npm](https://img.shields.io/npm/v/opencrypto.svg)](https://www.npmjs.com/package/opencrypto)
 [![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/opencrypto)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
 

@@ -11,10 +11,10 @@
   "scripts": {
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
   },
+  "license": "MIT",
   "keywords": [
     "cryptography",
     "browser",
-    "vue",
     "webcryptography"
   ],
   "devDependencies": {
