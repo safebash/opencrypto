@@ -118,7 +118,7 @@ export default class OpenCrypto {
   }
 
   d2h (d, unsigned) {
-    unsigned = (typeof unsigned !== 'undefined') ?  unsigned : false
+    unsigned = (typeof unsigned !== 'undefined') ? unsigned : false
 
     let h = null
     if (typeof d === 'number') {
