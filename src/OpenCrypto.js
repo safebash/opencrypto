@@ -117,15 +117,22 @@ export default class OpenCrypto {
     return str.replace(/\r?\n|\r/g, '')
   }
 
-  d2h (d) {
+  d2h (d, unsigned) {
+    unsigned = (typeof unsigned !== 'undefined') ?  unsigned : false
+
     let h = null
     if (typeof d === 'number') {
-      h = (d).toString(16)
+      if (unsigned) {
+        h = (d).toString(16)
+        return h.length % 2 ? '000' + h : '00' + h
+      } else {
+        h = (d).toString(16)
+        return h.length % 2 ? '0' + h : h
+      }
     } else if (typeof d === 'string') {
       h = (d.length / 2).toString(16)
+      return h.length % 2 ? '0' + h : h
     }
-
-    return h.length % 2 ? '0' + h : h
   }
 
   toAsn1 (wrappedKey, salt, iv, iterations, hash, cipher, keyLength) {
@@ -133,7 +140,7 @@ export default class OpenCrypto {
     wrappedKey = this.arrayBufferToHexString(wrappedKey)
     salt = this.arrayBufferToHexString(salt)
     iv = this.arrayBufferToHexString(iv)
-    iterations = this.d2h(iterations)
+    iterations = this.d2h(iterations, true)
 
     const PBES2_OID = '06092a864886f70d01050d'
     const PBKDF2_OID = '06092a864886f70d01050c'
