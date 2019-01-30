@@ -411,14 +411,14 @@ export default class OpenCrypto {
     * Method for generating asymmetric RSA-OAEP key pair
     * - bits            {Integer}     default: "2048" 2048 bits key pair
     * - usage           {Array}       default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" contains all available options at default
-    * - alg             {String}      default: "SHA-512" uses SHA-512 hash algorithm as default
+    * - hash            {String}      default: "SHA-512" uses SHA-512 hash algorithm as default
     * - paddingScheme   {String}      default: "RSA-OAEP" uses RSA-OAEP padding scheme
     * - extractable     {Boolean}     default: "true" whether the key is extractable
     */
-  getRSAKeyPair (bits, usage, alg, paddingScheme, extractable) {
+  getRSAKeyPair (bits, usage, hash, paddingScheme, extractable) {
     bits = (typeof bits !== 'undefined') ? bits : 2048
     usage = (typeof usage !== 'undefined') ? usage : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
-    alg = (typeof alg !== 'undefined') ? alg : 'SHA-512'
+    hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     paddingScheme = (typeof paddingScheme !== 'undefined') ? paddingScheme : 'RSA-OAEP'
     extractable = (typeof extractable !== 'undefined') ? extractable : true
 
@@ -431,8 +431,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of usage to be an Array')
       }
 
-      if (typeof alg !== 'string') {
-        throw new TypeError('Expected input of algo expected to be a String')
+      if (typeof hash !== 'string') {
+        throw new TypeError('Expected input of hash expected to be a String')
       }
 
       if (typeof paddingScheme !== 'string') {
@@ -448,7 +448,7 @@ export default class OpenCrypto {
           name: paddingScheme,
           modulusLength: bits,
           publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-          hash: { name: alg }
+          hash: { name: hash }
         },
         extractable,
         usage
@@ -465,10 +465,10 @@ export default class OpenCrypto {
     * Method for generating asymmetric Elliptic Curve Diffie-Hellman key pair
     * - curve           {String}      default: "P-256" uses P-256 curve
     * - usage           {Array}       default: "['deriveKey', 'deriveBits']" contains all available options at default
-    * - kind            {String}      default: "ECDH" uses Elliptic Curve Diffie-Hellman
+    * - type            {String}      default: "ECDH" uses Elliptic Curve Diffie-Hellman
     * - extractable     {Boolean}     default: "true" whether the key is extractable
     */
-  getECKeyPair (curve, usage, kind, extractable) {
+  getECKeyPair (curve, usage, type, extractable) {
     curve = (typeof curve !== 'undefined') ? curve : 'P-256'
     usage = (typeof usage !== 'undefined') ? usage : ['deriveKey', 'deriveBits']
     kind = (typeof kind !== 'undefined') ? kind : 'ECDH'
@@ -483,8 +483,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of usage to be an Array')
       }
 
-      if (typeof kind !== 'string') {
-        throw new TypeError('Expected input of kind to be a String')
+      if (typeof type !== 'string') {
+        throw new TypeError('Expected input of type to be a String')
       }
 
       if (typeof extractable !== 'boolean') {
@@ -493,7 +493,7 @@ export default class OpenCrypto {
 
       cryptoApi.generateKey(
         {
-          name: kind,
+          name: type,
           namedCurve: curve
         },
         extractable,
@@ -752,9 +752,9 @@ export default class OpenCrypto {
     * - cipher            {String}        default: "AES-CBC"
     * - keyLength         {Number}        default: "256"
     */
-  encryptPrivateKey (privateKey, passphrase, iterations, alg, cipher, keyLength) {
+  encryptPrivateKey (privateKey, passphrase, iterations, hash, cipher, keyLength) {
     iterations = (typeof iterations !== 'undefined') ? iterations : 64000
-    alg = (typeof alg !== 'undefined') ? alg : 'SHA-512'
+    hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     cipher = (typeof cipher !== 'undefined') ? cipher : 'AES-CBC'
     keyLength = (typeof keyLength !== 'undefined') ? keyLength : 256
     let self = this
@@ -772,8 +772,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of iterations to be a Number')
       }
 
-      if (typeof alg !== 'string') {
-        throw new TypeError('Expected input of alg to be a String')
+      if (typeof hash !== 'string') {
+        throw new TypeError('Expected input of hash to be a String')
       }
 
       if (typeof cipher !== 'string') {
@@ -810,7 +810,7 @@ export default class OpenCrypto {
             name: 'PBKDF2',
             salt: salt,
             iterations: iterations,
-            hash: alg
+            hash: hash
           },
           baseKey,
           {
@@ -829,7 +829,7 @@ export default class OpenCrypto {
               iv: iv
             }
           ).then(function (wrappedKey) {
-            let pemKey = self.toAsn1(wrappedKey, salt, iv, iterations, alg, cipher, keyLength)
+            let pemKey = self.toAsn1(wrappedKey, salt, iv, iterations, hash, cipher, keyLength)
             resolve(pemKey)
           }).catch(function (err) {
             reject(err)
@@ -1300,11 +1300,11 @@ export default class OpenCrypto {
     * - passphrase        {String}      default: "undefined" any passphrase string
     * - salt              {String}      default: "undefined" any salt, may be unique user ID for example
     * - iterations        {Number}      default: "300000"    number of iterations is 300 000 (Recommended)
-    * - alg               {String}      default: "SHA-512"   hash algorithm
+    * - hash              {String}      default: "SHA-512"   hash algorithm
     */
-  keyFromPassphrase (passphrase, salt, iterations, alg) {
-    iterations = (typeof iterations !== 'undefined') ? iterations : 300000
-    alg = (typeof alg !== 'undefined') ? alg : 'SHA-512'
+  keyFromPassphrase (passphrase, salt, iterations, hash) {
+    iterations = (typeof iterations !== 'undefined') ? iterations : 64000
+    hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     let self = this
 
     return new Promise(function (resolve, reject) {
@@ -1320,8 +1320,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of iterations to be a Number')
       }
 
-      if (typeof alg !== 'string') {
-        throw new TypeError('Expected input of alg to be a String')
+      if (typeof hash !== 'string') {
+        throw new TypeError('Expected input of hash to be a String')
       }
 
       cryptoApi.importKey(
@@ -1338,7 +1338,7 @@ export default class OpenCrypto {
             name: 'PBKDF2',
             salt: self.stringToArrayBuffer(salt),
             iterations: iterations,
-            hash: alg
+            hash: hash
           },
           baseKey,
           {
@@ -1369,10 +1369,10 @@ export default class OpenCrypto {
     *
     * Method for getting fingerprint of RSA public or private key
     * - key       {CryptoKey}     default: "undefined"
-    * - alg       {String}        default: "SHA-1" can be used SHA-256, SHA-384 or SHA-512
+    * - hash      {String}        default: "SHA-1" can be used SHA-256, SHA-384 or SHA-512
     */
-  cryptoKeyToFingerprint (key, alg) {
-    alg = (typeof alg !== 'undefined') ? alg : 'SHA-1'
+  cryptoKeyToFingerprint (key, hash) {
+    hash = (typeof hash !== 'undefined') ? hash : 'SHA-1'
     let self = this
 
     return new Promise(function (resolve, reject) {
@@ -1380,8 +1380,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of key to be a CryptoKey Object')
       }
 
-      if (typeof alg !== 'string') {
-        throw new TypeError('Expected input of alg to be a String')
+      if (typeof hash !== 'string') {
+        throw new TypeError('Expected input of hash to be a String')
       }
 
       let tmpKeyType = null
@@ -1397,7 +1397,7 @@ export default class OpenCrypto {
       ).then(function (keyAb) {
         cryptoApi.digest(
           {
-            name: alg
+            name: hash
           },
           keyAb
         ).then(function (fingerprint) {

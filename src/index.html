@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OpenCrypto Testing</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="OpenCrypto.js"></script>
+    <script>
+      var crypt = new OpenCrypto()
+      crypt.getRSAKeyPair(2048, ['verify', 'sign'], 'SHA-512', 'RSA-PSS').then(function (keyPair) {
+        console.log(keyPair)
+        crypt.cryptoPrivateToPem(keyPair.privateKey).then(function (pemPrivate) {
+          console.log(pemPrivate)
+          crypt.pemPrivateToCrypto(pemPrivate, true).then(function (cryptoPrivate) {
+            console.log(cryptoPrivate)
+          })
+        })
+
+        crypt.encryptPrivateKey(keyPair.privateKey, 'password').then(function (encryptedPrivatekey) {
+          console.log(encryptedPrivatekey)
+          crypt.decryptPrivateKey(encryptedPrivatekey, 'password').then(function (decryptPrivateKey) {
+            console.log(decryptPrivateKey)
+          })
+        })
+
+        crypt.cryptoKeyToFingerprint(keyPair.publicKey, 'SHA-512').then(function (fingerprint) {
+          console.log(fingerprint)
+        })
+      })
+
+      crypt.getECKeyPair('P-521').then(function (keyPair) {
+        console.log(keyPair)
+        crypt.cryptoPrivateToPem(keyPair.privateKey).then(function (pemPrivate) {
+          console.log(pemPrivate)
+          crypt.pemPrivateToCrypto(pemPrivate, true).then(function (cryptoPrivate) {
+            console.log(cryptoPrivate)
+          })
+        })
+
+        crypt.encryptPrivateKey(keyPair.privateKey, 'password').then(function (encryptedPrivatekey) {
+          console.log(encryptedPrivatekey)
+          crypt.decryptPrivateKey(encryptedPrivatekey, 'password', { name: 'ECDH', namedCurve: 'P-521' }, [ 'deriveKey', 'deriveBits' ]).then(function (decryptedPrivateKey) {
+            console.log(decryptedPrivateKey)
+          })
+        })
+      })
+
+      /* crypt.getRSAKeyPair(2048, ['sign', 'verify'], 'SHA-512', 'RSA-PSS').then(function (keyPair) {
+        console.log(keyPair)
+        crypt.cryptoPublicToPem(keyPair.publicKey).then(function (pemPublic) {
+          console.log(pemPublic)
+          crypt.pemPublicToCrypto(pemPublic, true).then(function (cryptoPublic) {
+            console.log(cryptoPublic)
+          })
+        })
+      })
+
+      crypt.getECKeyPair('P-521', ['sign', 'verify'], 'ECDSA').then(function (keyPair) {
+        console.log(keyPair)
+        crypt.cryptoPublicToPem(keyPair.publicKey).then(function (pemPublic) {
+          console.log(pemPublic)
+          crypt.pemPublicToCrypto(pemPublic, true).then(function (cryptoPublic) {
+            console.log(cryptoPublic)
+          })
+        })
+      }) */
+    </script>
+  </body>
+</html>
