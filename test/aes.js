@@ -15,7 +15,8 @@ describe('AES', function () {
 
   describe('encrypt and decrypt data', function () {
     it('should encrypt data using the shared key', function (done) {
-      crypto.encrypt(_sharedKey, 'confidential').then(function (encryptedData) {
+      let encodedData = crypto.stringToArrayBuffer('confidential')
+      crypto.encrypt(_sharedKey, encodedData).then(function (encryptedData) {
         _encryptedData = encryptedData
         done()
       })
