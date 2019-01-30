@@ -471,7 +471,7 @@ export default class OpenCrypto {
   getECKeyPair (curve, usage, type, extractable) {
     curve = (typeof curve !== 'undefined') ? curve : 'P-256'
     usage = (typeof usage !== 'undefined') ? usage : ['deriveKey', 'deriveBits']
-    kind = (typeof kind !== 'undefined') ? kind : 'ECDH'
+    type = (typeof type !== 'undefined') ? type : 'ECDH'
     extractable = (typeof extractable !== 'undefined') ? extractable : true
 
     return new Promise(function (resolve, reject) {
