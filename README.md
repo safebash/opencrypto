@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
 [![Become a Patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://patreon.com/safebash)
 
-OpenCrypto is a lightweight, high performance, standard-compliant JavaScript library built on top of [WebCryptography API](https://www.w3.org/TR/WebCryptoAPI/). This library makes it easier to implement cryptography in a browser with less code. It can convert and encode ASN.1, PEM and CryptoKey. OpenCrypto is created and maintained by [SafeBash](https://safebash.com).
+OpenCrypto is a lightweight, high performance, standard-compliant JavaScript library built on top of [Web Cryptography API](https://www.w3.org/TR/WebCryptoAPI/). This library makes it easier to implement cryptography in a browser with less code. It can convert and encode ASN.1, PEM and CryptoKey. OpenCrypto is created and maintained by [SafeBash](https://safebash.com).
 
 ## Instructions
 ### Load OpenCrypto into your web application

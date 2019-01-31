@@ -979,7 +979,7 @@ export default class OpenCrypto {
         privateKey,
         self.base64ToArrayBuffer(encryptedData)
       ).then(function (decrypted) {
-        resolve(self.arrayBufferToString(decrypted))
+        resolve(decrypted)
       }).catch(function (err) {
         reject(err)
       })
@@ -1287,7 +1287,7 @@ export default class OpenCrypto {
         sharedKey,
         encryptedAb
       ).then(function (decrypted) {
-        resolve(self.arrayBufferToBase64(decrypted))
+        resolve(decrypted)
       }).catch(function (err) {
         reject(err)
       })
