@@ -2,11 +2,11 @@
 [![npm](https://img.shields.io/npm/v/opencrypto.svg)](https://www.npmjs.com/package/opencrypto)
 [![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/opencrypto)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://patreon.com/safebash)
+[![Become a Patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://patreon.com/safebash)
 
-OpenCrypto is a lightweight JavaScript library built on top of WebCryptography API. The purpose of this library is to make it easier for a developer to implement cryptography in the browser with less code and without having to deal with ASN.1, PEM or other formats manually.
+OpenCrypto is a lightweight, high performance, standard-compliant JavaScript library built on top of [WebCryptography API](https://www.w3.org/TR/WebCryptoAPI/). This library makes it easier to implement cryptography in a browser with less code. It can convert and encode ASN.1, PEM and CryptoKey. OpenCrypto is created and maintained by [SafeBash](https://safebash.com).
 
-## Code Usage
+## Instructions
 ### Load OpenCrypto into your web application
 ```javascript
 <script type="text/javascript" src="OpenCrypto.min.js"></script>
@@ -144,7 +144,7 @@ crypt.rsaDecrypt(privateKey, encryptedData).then(function (decryptedDataAsymmetr
  * sharedKey: CryptoKey | default: undefined
  * publicKeyHash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
  */
-crypt.encryptKey(publicKey, sharedKey).then(function (encryptedSharedKey) {
+crypt.encryptKey(publicKey, sharedKey, publicKeyHash).then(function (encryptedSharedKey) {
   console.log(encryptedSharedKey)
 })
 
@@ -172,7 +172,7 @@ crypt.sign(privateKey, data).then(function (signature) {
 
 // Verify signature
 /*
- * privateKey: CryptoKey | default: undefined
+ * publicKey: CryptoKey | default: undefined
  * signature: base64 String | default: undefined
  * data: ArrayBuffer | default: undefined
  */
