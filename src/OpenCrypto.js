@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) 2016 Peter Bielak
+ * Copyright (c) 2016 SafeBash
  * Cryptography Consultancy by Andrew Kozlik, Ph.D.
  *
  */
@@ -8,7 +8,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2016 Peter Bielak
+ * Copyright (c) 2016 SafeBash
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights
@@ -1387,8 +1387,10 @@ export default class OpenCrypto {
       let tmpKeyType = null
       if (key.type === 'public') {
         tmpKeyType = 'spki'
-      } else {
+      } else if (key.type === 'private') {
         tmpKeyType = 'pkcs8'
+      } else {
+        tmpKeyType = 'raw'
       }
 
       cryptoApi.exportKey(
