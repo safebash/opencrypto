@@ -57,7 +57,7 @@ describe('RSA', function () {
 
     it('should return asymmetrically decrypted data', function (done) {
       crypto.rsaDecrypt(_rsaKeyPair.privateKey, _rsaEncryptedPrivateKey).then(function (asymmetricallyDecryptedData) {
-        if (asymmetricallyDecryptedData === 'confidential') {
+        if (crypto.arrayBufferToString(asymmetricallyDecryptedData) === 'confidential') {
           done()
         }
       })
