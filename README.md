@@ -143,7 +143,7 @@ crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(function 
  * wrappingKey: CryptoKey | default: undefined
  * sharedKey: CryptoKey | default: undefined
  * options:
- *   for ECDH: { publicKey: "undefined", derivedKeyCipher: 'AES-GCM', derivedKeyLength: 256 }
+ *   for ECDH: { privateKey: "undefined", derivedKeyCipher: 'AES-GCM', derivedKeyLength: 256 }
  *   for RSA-OAEP: {}
  *   for AES-GCM: {}
  */
