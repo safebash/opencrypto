@@ -30,9 +30,9 @@ const crypt = new OpenCrypto()
  *   for OAEP = ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
  *   for PSS = ['sign', 'verify']
  *   default: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
- * extractable: true or false | default: true
+ * isExtractable: true or false | default: true
  */
-crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, extractable).then(function (keyPair) {
+crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, isExtractable).then(function (keyPair) {
   console.log(keyPair.publicKey)
   console.log(keyPair.privateKey)
 })
@@ -60,9 +60,9 @@ crypt.rsaDecrypt(privateKey, encryptedData).then(function (decryptedDataAsymmetr
  * curve: P-256 or P-384 or P-521 | default: P-256
  * type: 'ECDH' or 'ECDSA' | default: 'ECDH'
  * usages: default: ['deriveKey', 'deriveBits']
- * extractable: true or false | default: true
+ * isExtractable: true or false | default: true
  */
-crypt.getECKeyPair(curve, type, usages, extractable).then(function (keyPair) {
+crypt.getECKeyPair(curve, type, usages, isExtractable).then(function (keyPair) {
   console.log(keyPair.privateKey)
   console.log(keyPair.publicKey)
 })

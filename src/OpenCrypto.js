@@ -415,14 +415,14 @@ export default class OpenCrypto {
     * - hash            {String}      default: "SHA-512" uses SHA-512 hash algorithm as default
     * - paddingScheme   {String}      default: "RSA-OAEP" uses RSA-OAEP padding scheme
     * - usages          {Array}       default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" contains all available options at default
-    * - extractable     {Boolean}     default: "true" whether the key is extractable
+    * - isExtractable   {Boolean}     default: "true" whether the key is extractable
     */
-  getRSAKeyPair (modulusLength, hash, paddingScheme, usages, extractable) {
+  getRSAKeyPair (modulusLength, hash, paddingScheme, usages, isExtractable) {
     modulusLength = (typeof modulusLength !== 'undefined') ? modulusLength : 2048
     hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     paddingScheme = (typeof paddingScheme !== 'undefined') ? paddingScheme : 'RSA-OAEP'
     usages = (typeof usages !== 'undefined') ? usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
-    extractable = (typeof extractable !== 'undefined') ? extractable : true
+    isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
 
     return new Promise(function (resolve, reject) {
       if (typeof modulusLength !== 'number') {
@@ -441,8 +441,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of usages to be an Array')
       }
 
-      if (typeof extractable !== 'boolean') {
-        throw new TypeError('Expected input of extractable to be a Boolean')
+      if (typeof isExtractable !== 'boolean') {
+        throw new TypeError('Expected input of isExtractable to be a Boolean')
       }
 
       cryptoApi.generateKey(
@@ -452,7 +452,7 @@ export default class OpenCrypto {
           publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
           hash: { name: hash }
         },
-        extractable,
+        isExtractable,
         usages
       ).then(function (keyPair) {
         resolve(keyPair)
@@ -534,13 +534,13 @@ export default class OpenCrypto {
     * - curve           {String}      default: "P-256" uses P-256 curve
     * - type            {String}      default: "ECDH" uses Elliptic Curve Diffie-Hellman
     * - usages          {Array}       default: "['deriveKey', 'deriveBits']" contains all available options at default
-    * - extractable     {Boolean}     default: "true" whether the key is extractable
+    * - isExtractable   {Boolean}     default: "true" whether the key is extractable
     */
-  getECKeyPair (curve, type, usages, extractable) {
+  getECKeyPair (curve, type, usages, isExtractable) {
     curve = (typeof curve !== 'undefined') ? curve : 'P-256'
     type = (typeof type !== 'undefined') ? type : 'ECDH'
     usages = (typeof usages !== 'undefined') ? usages : ['deriveKey', 'deriveBits']
-    extractable = (typeof extractable !== 'undefined') ? extractable : true
+    isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
 
     return new Promise(function (resolve, reject) {
       if (typeof curve !== 'string') {
@@ -555,8 +555,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of usages to be an Array')
       }
 
-      if (typeof extractable !== 'boolean') {
-        throw new TypeError('Expected input of extractable to be a Boolean')
+      if (typeof isExtractable !== 'boolean') {
+        throw new TypeError('Expected input of isExtractable to be a Boolean')
       }
 
       cryptoApi.generateKey(
@@ -564,7 +564,7 @@ export default class OpenCrypto {
           name: type,
           namedCurve: curve
         },
-        extractable,
+        isExtractable,
         usages
       ).then(function (keyPair) {
         resolve(keyPair)
