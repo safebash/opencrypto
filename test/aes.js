@@ -6,7 +6,7 @@ let _encryptedData = null
 describe('AES', function () {
   describe('generate keys', function () {
     it('should return shared key', function (done) {
-      crypto.getSharedKey(256, ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], true, 'AES-GCM').then(function (sharedKey) {
+      crypto.getSharedKey().then(function (sharedKey) {
         _sharedKey = sharedKey
         done()
       })
@@ -24,7 +24,10 @@ describe('AES', function () {
 
     it('should decrypt data using the shared key', function (done) {
       crypto.decrypt(_sharedKey, _encryptedData).then(function (decryptedData) {
-        done()
+        decryptedData = crypto.arrayBufferToString(decryptedData)
+        if (decryptedData === 'confidential') {
+          done()
+        }
       })
     })
   })

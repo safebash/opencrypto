@@ -11,7 +11,7 @@ describe('RSA', function () {
   describe('generate keys', function () {
     it('should return 1024 bit key pair', function (done) {
       this.timeout(10000)
-      crypto.getRSAKeyPair(1024, ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], 'SHA-256').then(function (keyPair) {
+      crypto.getRSAKeyPair().then(function (keyPair) {
         _rsaKeyPair = keyPair
         done()
       })
@@ -67,7 +67,7 @@ describe('RSA', function () {
   describe('encrypt and decrypt shared key', function () {
     it('should return asymmetrically encrypted shared key', function (done) {
       crypto.getSharedKey(256).then(function (sharedKey) {
-        crypto.encryptKey(_rsaKeyPair.publicKey, sharedKey, 'SHA-512').then(function (asymmetricallyEncryptedSharedKey) {
+        crypto.encryptKey(_rsaKeyPair.publicKey, sharedKey).then(function (asymmetricallyEncryptedSharedKey) {
           _rsaAsymmetricallyEncryptedSharedKey = asymmetricallyEncryptedSharedKey
           done()
         })
@@ -75,7 +75,7 @@ describe('RSA', function () {
     })
 
     it('should return asymmetrically decrypted shared key', function (done) {
-      crypto.decryptKey(_rsaKeyPair.privateKey, _rsaAsymmetricallyEncryptedSharedKey, 'AES-GCM', 256, 1024, 'SHA-512').then(function (asymmetricallyDecryptedSharedKey) {
+      crypto.decryptKey(_rsaKeyPair.privateKey, _rsaAsymmetricallyEncryptedSharedKey).then(function (asymmetricallyDecryptedSharedKey) {
         done()
       })
     })
@@ -83,14 +83,14 @@ describe('RSA', function () {
 
   describe('encrypt and decrypt private key', function () {
     it('should return encrypted private key PKCS8', function (done) {
-      crypto.encryptPrivateKey(_rsaKeyPair.privateKey, 'securepassphrase', 1000, 'SHA-512', 'AES-CBC', 256).then(function (encryptedPrivateKey) {
+      crypto.encryptPrivateKey(_rsaKeyPair.privateKey, 'securepassphrase').then(function (encryptedPrivateKey) {
         _rsaEncryptedPrivateKey = encryptedPrivateKey
         done()
       })
     })
 
     it('should return decrypted private key PKCS8', function (done) {
-      crypto.decryptPrivateKey(_rsaEncryptedPrivateKey, 'securepassphrase').then(function (decryptedPrivateKey) {
+      crypto.decryptPrivateKey(_rsaEncryptedPrivateKey, 'securepassphrase', { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, keyUsages: ['decrypt', 'unwrapKey'], isExtractable: true }).then(function (decryptedPrivateKey) {
         done()
       })
     })
