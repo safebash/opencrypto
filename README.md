@@ -20,53 +20,7 @@ import OpenCrypto from 'opencrypto'
 // Initialize new OpenCrypto instance
 const crypt = new OpenCrypto()
 
-// Asymmetric Encryption (RSA)
-// Generate RSA key pair
-/*
- * modulusLength: 1024 or 2048 or 4096 | default: 2048
- * hash: 'SHA1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
- * paddingScheme: 'RSA-OAEP' or 'RSA-PSS' | default: 'RSA-OAEP'
- * usages:
- *   for OAEP = ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
- *   for PSS = ['sign', 'verify']
- *   default: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
- * isExtractable: true or false | default: true
- */
-crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, isExtractable).then(function (keyPair) {
-  console.log(keyPair.publicKey)
-  console.log(keyPair.privateKey)
-})
-
-// Encrypt data using public key
-/*
- * publicKey: CryptoKey | default: undefined
- * data: ArrayBuffer | default: undefined
- */
-crypt.rsaEncrypt(publicKey, data).then(function (encryptedDataAsymmetric) {
-  console.log(encryptedDataAsymmetric)
-})
-
-// Decrypt data using private key
-/*
- * privateKey: CryptoKey | default: undefined
- * encryptedData: base64 String | default: undefined
- */
-crypt.rsaDecrypt(privateKey, encryptedData).then(function (decryptedDataAsymmetric) {
-  console.log(decryptedDataAsymmetric)
-})
-
-// Generate EC key pair
-/*
- * curve: P-256 or P-384 or P-521 | default: P-256
- * type: 'ECDH' or 'ECDSA' | default: 'ECDH'
- * usages: default: ['deriveKey', 'deriveBits']
- * isExtractable: true or false | default: true
- */
-crypt.getECKeyPair(curve, type, usages, isExtractable).then(function (keyPair) {
-  console.log(keyPair.privateKey)
-  console.log(keyPair.publicKey)
-})
-
+// Converting Keys
 // Convert CryptoKey of type private to PEM
 /*
  * privateKey: CryptoKey | default: undefined
@@ -109,6 +63,53 @@ crypt.pemPublicToCrypto(pem, options).then(function (cryptoPublic) {
   console.log(cryptoPublic)
 })
 
+// Asymmetric Encryption (RSA)
+// Generate RSA key pair
+/*
+ * modulusLength: 1024 or 2048 or 4096 | default: 2048
+ * hash: 'SHA1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
+ * paddingScheme: 'RSA-OAEP' or 'RSA-PSS' | default: 'RSA-OAEP'
+ * usages:
+ *   for RSA-OAEP = ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+ *   for RSA-PSS = ['sign', 'verify']
+ *   default: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+ * isExtractable: true or false | default: true
+ */
+crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, isExtractable).then(function (keyPair) {
+  console.log(keyPair.publicKey)
+  console.log(keyPair.privateKey)
+})
+
+// Encrypt data using public key
+/*
+ * publicKey: CryptoKey | default: undefined
+ * data: ArrayBuffer | default: undefined
+ */
+crypt.rsaEncrypt(publicKey, data).then(function (encryptedDataAsymmetric) {
+  console.log(encryptedDataAsymmetric)
+})
+
+// Decrypt data using private key
+/*
+ * privateKey: CryptoKey | default: undefined
+ * encryptedData: base64 String | default: undefined
+ */
+crypt.rsaDecrypt(privateKey, encryptedData).then(function (decryptedDataAsymmetric) {
+  console.log(decryptedDataAsymmetric)
+})
+
+// Generate EC key pair
+/*
+ * curve: P-256 or P-384 or P-521 | default: P-256
+ * type: 'ECDH' or 'ECDSA' | default: 'ECDH'
+ * usages: default: ['deriveKey', 'deriveBits']
+ * isExtractable: true or false | default: true
+ */
+crypt.getECKeyPair(curve, type, usages, isExtractable).then(function (keyPair) {
+  console.log(keyPair.privateKey)
+  console.log(keyPair.publicKey)
+})
+
 // Encrypt CryptoKey of type private into PEM Encrypted Private Key
 /*
  * privateKey: CryptoKey | default: undefined
@@ -140,25 +141,22 @@ crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(function 
 
 // Encrypt shared key
 /*
+ * Supports AES and RSA-OAEP
  * wrappingKey: CryptoKey | default: undefined
  * sharedKey: CryptoKey | default: undefined
- * options:
- *   for ECDH: { privateKey: "undefined", derivedKeyCipher: 'AES-GCM', derivedKeyLength: 256 }
- *   for RSA-OAEP: {}
- *   for AES-GCM: {}
  */
-crypt.encryptKey(publicKey, sharedKey, options).then(function (encryptedSharedKey) {
+crypt.encryptKey(wrappingKey, sharedKey).then(function (encryptedSharedKey) {
   console.log(encryptedSharedKey)
 })
 
 // Decrypt shared key
 /*
+ * Supports AES and RSA-OAEP
  * unwrappingKey: CryptoKey | default: undefined
  * encryptedSharedKey: CryptoKey | default: undefined
  * options:
- *   for ECDH: { publicKey: "undefined", derivedKeyCipher: 'AES-GCM', derivedKeyLength: 256, keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
- *   for RSA-OAEP: { keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
  *   for AES-GCM: { keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ *   for RSA-OAEP: { keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
  */
 crypt.decryptKey(privateKey, encryptedSharedKey, options).then(function (decryptedSharedKey) {
   console.log(decryptedSharedKey)
@@ -169,8 +167,8 @@ crypt.decryptKey(privateKey, encryptedSharedKey, options).then(function (decrypt
  * privateKey: CryptoKey | default: undefined
  * data: ArrayBuffer | default: undefined
  * options:
- *   for ECDSA: { hash: 'SHA-512' }
- *   for RSA-PSS: { saltLength: 128 }
+ *   for ECDSA: { hash: 'SHA-512', isBuffer: false }
+ *   for RSA-PSS: { saltLength: 128, isBuffer: false }
  */
 crypt.sign(privateKey, data, options).then(function (signature) {
   console.log(signature)
@@ -182,8 +180,8 @@ crypt.sign(privateKey, data, options).then(function (signature) {
  * signature: base64 String | default: undefined
  * data: ArrayBuffer | default: undefined
  * options:
- *   for ECDSA: { hash: 'SHA-512' }
- *   for RSA-PSS: { saltLength: 128 }
+ *   for ECDSA: { hash: 'SHA-512', isBuffer: false }
+ *   for RSA-PSS: { saltLength: 128, isBuffer: false }
  */
 crypt.verify(publicKey, signature, data, options).then(function (isValid) {
   console.log(isValid)
@@ -243,8 +241,8 @@ crypt.cryptoKeyToFingerprint(key, hash).then(function (fingerprint) {
 /*
  * size: Integer | default: 16
  */
-crypt.getRandomData(size).then(function (salt) {
-  console.log(salt)
+crypt.getRandomData(size).then(function (data) {
+  console.log(data)
 })
 
 ```
