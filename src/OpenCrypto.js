@@ -1709,7 +1709,7 @@ export default class OpenCrypto {
 
   /**
     *
-    * Derives hash from passphrase
+    * Derive hash from passphrase
     * - passphrase        {String}        default: "undefined" passphrase string
     * - salt              {ArrayBuffer}   default: "undefined" salt
     * - iterations        {Number}        default: "64000"     number of iterations
