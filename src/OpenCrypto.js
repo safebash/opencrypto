@@ -1121,7 +1121,7 @@ export default class OpenCrypto {
    * ECDH Key Agreement
    * - publicKey          {CryptoKey}     default: "undefined"
    * - privateKey         {CryptoKey}     default: "undefined"
-   * - options            {Object}        default: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt'], isExtractable: true }
+   * - options            {Object}        default: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    */
   keyAgreement (privateKey, publicKey, options) {
     return new Promise(function (resolve, reject) {
@@ -1709,14 +1709,14 @@ export default class OpenCrypto {
 
   /**
     *
-    * Method for generating symmetric AES 256 bit key derived from passphrase and salt
-    * - passphrase        {String}      default: "undefined" any passphrase string
-    * - salt              {String}      default: "undefined" any salt, may be unique user ID for example
-    * - iterations        {Number}      default: "64000"     number of iterations
-    * - hash              {String}      default: "SHA-512"   hash algorithm
-    * - length            {Number}      default: "256"       key length
+    * Derives hash from passphrase
+    * - passphrase        {String}        default: "undefined" passphrase string
+    * - salt              {ArrayBuffer}   default: "undefined" salt
+    * - iterations        {Number}        default: "64000"     number of iterations
+    * - hash              {String}        default: "SHA-512"   hash algorithm
+    * - length            {Number}        default: "256"       key length
     */
-  keyFromPassphrase (passphrase, salt, iterations, hash, length) {
+  hashPassphrase (passphrase, salt, iterations, hash, length) {
     const self = this
 
     iterations = (typeof iterations !== 'undefined') ? iterations : 64000
@@ -1728,8 +1728,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of passphrase to be a String')
       }
 
-      if (typeof salt !== 'string') {
-        throw new TypeError('Expected input of salt to be a String')
+      if (typeof salt !== 'object') {
+        throw new TypeError('Expected input of salt to be an ArrayBuffer')
       }
 
       if (typeof iterations !== 'number') {
@@ -1756,7 +1756,7 @@ export default class OpenCrypto {
         cryptoApi.deriveKey(
           {
             name: 'PBKDF2',
-            salt: self.stringToArrayBuffer(salt),
+            salt: salt,
             iterations: iterations,
             hash: hash
           },
@@ -1766,7 +1766,7 @@ export default class OpenCrypto {
             length: length
           },
           true,
-          ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+          ['encrypt', 'decrypt']
         ).then(function (derivedKey) {
           cryptoApi.exportKey(
             'raw',

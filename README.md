@@ -143,7 +143,7 @@ crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(function 
 /*
  * privateKey CryptoKey | default: undefined
  * publicKey CryptoKey | default: undefined
- * options: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt'], isExtractable: true }
+ * options: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
  */
 crypt.keyAgreement(privateKey, publicKey).then(function (symmetricKey) {
   console.log(symmetricKey)

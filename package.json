@@ -1,6 +1,6 @@
 {
   "name": "opencrypto",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "OpenCrypto is a lightweight JavaScript library built on top of WebCryptography API",
   "main": "src/OpenCrypto.js",
   "files": [
