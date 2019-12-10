@@ -226,7 +226,7 @@ crypt.decrypt(sharedKey, encryptedData).then(function (decryptedData) {
 })
 
 // Other Crypto Features
-// Derives hash from passphrase
+// Derive hash from passphrase
 /*
  * passphrase: String | default: undefined
  * salt: ArrayBuffer | default: undefined
