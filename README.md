@@ -226,15 +226,15 @@ crypt.decrypt(sharedKey, encryptedData).then(function (decryptedData) {
 })
 
 // Other Crypto Features
-// Derive key from passphrase
+// Derives hash from passphrase
 /*
  * passphrase: String | default: undefined
- * salt: String | default: undefined
+ * salt: ArrayBuffer | default: undefined
  * iterations: Integer | default: 64000
  * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
  * length: default: 256
  */
-crypt.keyFromPassphrase(passphrase, salt, iterations, hash, length).then(function (derivedKey) {
+crypt.hashPassphrase(passphrase, salt, iterations, hash, length).then(function (derivedKey) {
   console.log(derivedKey)
 })
 
