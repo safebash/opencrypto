@@ -139,6 +139,13 @@ crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(function 
   console.log(decryptedPrivateKey)
 })
 
+// ECDH Key Agreement
+/*
+ * publicKey CryptoKey | default: undefined
+ * privateKey CryptoKey | default: undefined
+ * options: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt'], isExtractable: true }
+ */
+
 // Encrypt shared key
 /*
  * Supports AES and RSA-OAEP
