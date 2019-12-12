@@ -98,7 +98,7 @@ describe('RSA', function () {
 
   describe('get key fingerprint', function () {
     it('should return key fingerprint', function (done) {
-      crypto.cryptoKeyToFingerprint(_rsaKeyPair.publicKey, 'SHA-512').then(function (keyFingerprint) {
+      crypto.getFingerprint(_rsaKeyPair.publicKey).then(function (keyFingerprint) {
         done()
       })
     })
