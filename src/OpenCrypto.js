@@ -1,7 +1,7 @@
 /**
  *
  * Copyright (c) 2016 SafeBash
- * Cryptography consultancy by Andrew Kozlik, Ph.D.
+ * Cryptography consultant: Andrew Kozlik, Ph.D.
  *
  */
 
@@ -1414,8 +1414,8 @@ export default class OpenCrypto {
     * - privateKey     {CryptoKey}      default: "undefined"
     * - data           {ArrayBuffer}    default: "undefined"
     * - options        {Object}         default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512', isBuffer: false }
-    * -- RSA-PSS: { saltLength: 128, isBuffer: false }
+    * -- ECDSA: { hash: 'SHA-512' }
+    * -- RSA-PSS: { saltLength: 128 }
     */
   sign (privateKey, data, options) {
     const self = this
@@ -1433,12 +1433,6 @@ export default class OpenCrypto {
         options = {}
       }
 
-      options.isBuffer = (typeof options.isBuffer !== 'undefined') ? options.isBuffer : false
-
-      if (typeof options.isBuffer !== 'boolean') {
-        throw new TypeError('Expected input of options.isBuffer to be a Boolean')
-      }
-
       if (privateKey.algorithm.name === 'ECDSA') {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
 
@@ -1454,12 +1448,8 @@ export default class OpenCrypto {
           privateKey,
           data
         ).then(function (signature) {
-          if (isBuffer) {
-            resolve(signature)
-          } else {
-            const b64Signature = self.arrayBufferToBase64(signature)
-            resolve(b64Signature)
-          }
+          const b64Signature = self.arrayBufferToBase64(signature)
+          resolve(b64Signature)
         })
       } else if (privateKey.algorithm.name === 'RSA-PSS') {
         options.saltLength = (typeof options.saltLength !== 'undefined') ? options.saltLength : 128
@@ -1476,12 +1466,8 @@ export default class OpenCrypto {
           privateKey,
           data
         ).then(function (signature) {
-          if (options.isBuffer) {
-            resolve(signature)
-          } else {
-            const b64Signature = self.arrayBufferToBase64(signature)
-            resolve(b64Signature)
-          }
+          const b64Signature = self.arrayBufferToBase64(signature)
+          resolve(b64Signature)
         }).catch(function (err) {
           reject(err)
         })
@@ -1495,13 +1481,13 @@ export default class OpenCrypto {
     *
     * Verifies signature using ECDSA or RSA-PSS
     * - publicKey      {CryptoKey}       default: "undefined"
-    * - signature      {base64}          default: "undefined"
     * - data           {ArrayBuffer}     default: "undefined"
+    * - signature      {base64}          default: "undefined"
     * - options        {Object}          default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512', isBuffer: false }
-    * -- RSA-PSS: { saltLength: 128, isBuffer: false }
+    * -- ECDSA: { hash: 'SHA-512' }
+    * -- RSA-PSS: { saltLength: 128 }
     */
-  verify (publicKey, signature, data, options) {
+  verify (publicKey, data, signature, options) {
     const self = this
 
     return new Promise(function (resolve, reject) {
@@ -1509,32 +1495,19 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of publicKey to be a CryptoKey Object')
       }
 
-      if (typeof options === 'undefined') {
-        options = {}
-      }
-
-      options.isBuffer = (typeof options.isBuffer !== 'undefined') ? options.isBuffer : false
-
-      if (typeof options.isBuffer !== 'boolean') {
-        throw new TypeError('Expected input of options.isBuffer to be a Boolean')
-      }
-
-      if (options.isBuffer && typeof signature !== 'object') {
-        throw new TypeError('Expected input of signature to be an ArrayBuffer')
-      }
-
-      if (options.isBuffer === false && typeof signature !== 'string') {
-        throw new TypeError('Expected input of signature to be a base64 String')
-      }
-
       if (typeof data !== 'object') {
         throw new TypeError('Expected input of data to be an ArrayBuffer')
       }
 
-      let signatureAb = signature
-      if (options.isBuffer === false) {
-        signatureAb = self.base64ToArrayBuffer(signature)
+      if (typeof signature !== 'string') {
+        throw new TypeError('Expected input of signature to be a base64 String')
       }
+
+      if (typeof options === 'undefined') {
+        options = {}
+      }
+      
+      const signatureAb = self.base64ToArrayBuffer(signature)
 
       if (publicKey.algorithm.name === 'ECDSA') {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
@@ -1787,46 +1760,60 @@ export default class OpenCrypto {
 
   /**
     *
-    * Method for getting fingerprint of EC, RSA or AES keys
-    * - key       {CryptoKey}     default: "undefined"
-    * - hash      {String}        default: "SHA-1" can be used SHA-256, SHA-384 or SHA-512
+    * Method for getting fingerprint of ECC, RSA or AES keys
+    * - key         {CryptoKey}     default: "undefined"
+    * - options     {Object}        default: { hash: 'SHA-512', isBuffer: false }
     */
-  cryptoKeyToFingerprint (key, hash) {
+  getFingerprint (key, options) {
     const self = this
-
-    hash = (typeof hash !== 'undefined') ? hash : 'SHA-1'
 
     return new Promise(function (resolve, reject) {
       if (Object.prototype.toString.call(key) !== '[object CryptoKey]') {
         throw new TypeError('Expected input of key to be a CryptoKey Object')
       }
 
-      if (typeof hash !== 'string') {
-        throw new TypeError('Expected input of hash to be a String')
+      if (typeof options === 'undefined') {
+        options = {}
       }
 
-      let tmpKeyType = null
+      options.hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
+      options.isBuffer = (typeof options.isBuffer !== 'undefined') ? options.isBuffer : false
+
+      if (typeof options.hash !== 'string') {
+        throw new TypeError('Expected input of options.hash to be a String')
+      }
+
+      if (typeof options.isBuffer !== 'boolean') {
+        throw new TypeError('Expected input of options.isBuffer to be a Boolean')
+      }
+
+      let keyType = null
       if (key.type === 'public') {
-        tmpKeyType = 'spki'
+        keyType = 'spki'
       } else if (key.type === 'private') {
-        tmpKeyType = 'pkcs8'
+        keyType = 'pkcs8'
       } else if (key.type === 'secret') {
-        tmpKeyType = 'raw'
+        keyType = 'raw'
       } else {
-        throw new TypeError('Invalid encryption key')
+        throw new TypeError('Expected input of key is not a valid CryptoKey')
       }
 
       cryptoApi.exportKey(
-        tmpKeyType,
+        keyType,
         key
       ).then(function (keyAb) {
         cryptoApi.digest(
           {
-            name: hash
+            name: options.hash
           },
           keyAb
         ).then(function (fingerprint) {
-          resolve(self.arrayBufferToHexString(fingerprint))
+          if (options.isBuffer) {
+            resolve(fingerprint)
+          } else {
+            const hexFingerprint = self.arrayBufferToHexString(fingerprint)
+            resolve(hexFingerprint)
+          }
         }).catch(function (err) {
           reject(err)
         })

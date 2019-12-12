@@ -20,7 +20,7 @@ import OpenCrypto from 'opencrypto'
 // Initialize new OpenCrypto instance
 const crypt = new OpenCrypto()
 
-// Converting Keys
+// Conversion of CryptoKey and PEM
 // Convert CryptoKey of type private to PEM
 /*
  * privateKey: CryptoKey | default: undefined
@@ -62,6 +62,43 @@ crypt.cryptoPublicToPem(publicKey).then(function (publicPem) {
 crypt.pemPublicToCrypto(pem, options).then(function (cryptoPublic) {
   console.log(cryptoPublic)
 })
+
+// Data encoding and decoding
+// Encode ArrayBuffer to Hexadecimal String
+/*
+ * ab: ArrayBuffer | default: undefined
+ */
+const hexString = crypt.arrayBufferToHexString(ab)
+
+// Decode Hexadecimal String to ArrayBuffer
+/*
+ * hexString: Hexadecimal encoded String | default: undefined
+ */
+const ab = crypt.hexStringToArrayBuffer(hexString)
+
+// Encode ArrayBuffer to Base64
+/*
+ * ab: ArrayBuffer | default: undefined
+ */
+const base64 = crypt.arrayBufferToBase64(ab)
+
+// Decode Base64 to ArrayBuffer
+/*
+ * base64: Base64 encoded String | default: undefined
+ */
+const ab = crypt.base64ToArrayBuffer(base64)
+
+// Encode ArrayBuffer to String
+/*
+ * ab: ArrayBuffer | default: undefined
+ */
+const str = crypt.arrayBufferToString(ab)
+
+// Decode String to ArrayBuffer
+/*
+ * str: String | default: undefined
+ */
+const ab = crypt.stringToArrayBuffer(str)
 
 // Asymmetric Encryption (RSA)
 // Generate RSA key pair
@@ -177,8 +214,8 @@ crypt.decryptKey(privateKey, encryptedSharedKey, options).then(function (decrypt
  * privateKey: CryptoKey | default: undefined
  * data: ArrayBuffer | default: undefined
  * options:
- *   for ECDSA: { hash: 'SHA-512', isBuffer: false }
- *   for RSA-PSS: { saltLength: 128, isBuffer: false }
+ *   for ECDSA: { hash: 'SHA-512' }
+ *   for RSA-PSS: { saltLength: 128 }
  */
 crypt.sign(privateKey, data, options).then(function (signature) {
   console.log(signature)
@@ -187,13 +224,13 @@ crypt.sign(privateKey, data, options).then(function (signature) {
 // Verify signature
 /*
  * publicKey: CryptoKey | default: undefined
- * signature: base64 String | default: undefined
  * data: ArrayBuffer | default: undefined
+ * signature: base64 String | default: undefined
  * options:
- *   for ECDSA: { hash: 'SHA-512', isBuffer: false }
- *   for RSA-PSS: { saltLength: 128, isBuffer: false }
+ *   for ECDSA: { hash: 'SHA-512' }
+ *   for RSA-PSS: { saltLength: 128 }
  */
-crypt.verify(publicKey, signature, data, options).then(function (isValid) {
+crypt.verify(publicKey, data, signature, options).then(function (isValid) {
   console.log(isValid)
 })
 
@@ -241,9 +278,9 @@ crypt.hashPassphrase(passphrase, salt, iterations, hash, length).then(function (
 // Get key fingerprint
 /*
  * key: CryptoKey | default: undefined
- * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
+ * options: Object | default: { hash: 'SHA-512', isBuffer: false }
  */
-crypt.cryptoKeyToFingerprint(key, hash).then(function (fingerprint) {
+crypt.getFingerprint(key, options).then(function (fingerprint) {
   console.log(fingerprint)
 })
 
@@ -251,15 +288,16 @@ crypt.cryptoKeyToFingerprint(key, hash).then(function (fingerprint) {
 /*
  * size: Integer | default: 16
  */
-crypt.getRandomData(size).then(function (data) {
+crypt.getRandomBytes(size).then(function (data) {
   console.log(data)
 })
 
 ```
 
 ## Standards Compliance
-[RFC 5958](https://tools.ietf.org/html/rfc5958)<br>
+[RFC 5280](https://tools.ietf.org/html/rfc5280)<br>
 [RFC 6090](https://tools.ietf.org/html/rfc6090)<br>
+[RFC 5208](https://tools.ietf.org/html/rfc5208)<br>
 [RFC 5480](https://tools.ietf.org/html/rfc5480)<br>
 [RFC 5915](https://tools.ietf.org/html/rfc5915)<br>
 [RFC 8018](https://tools.ietf.org/html/rfc8018)<br>
