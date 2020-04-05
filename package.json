@@ -1,6 +1,6 @@
 {
   "name": "opencrypto",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "OpenCrypto is a lightweight JavaScript library built on top of WebCryptography API",
   "main": "src/OpenCrypto.js",
   "files": [
@@ -30,7 +30,7 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^1.3.0",
-    "mocha": "^6.2.2",
-    "standard": "^14.3.1"
+    "mocha": "^7.1.1",
+    "standard": "^14.3.3"
   }
 }
