@@ -1,6 +1,7 @@
 # OpenCrypto
 [![npm](https://img.shields.io/npm/v/opencrypto.svg)](https://www.npmjs.com/package/opencrypto)
 [![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/opencrypto)
+[![npm](https://img.shields.io/npm/dm/opencrypto)](https://npmcharts.com/compare/opencrypto?minimal=true)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
 [![Become a Patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://patreon.com/safebash)
 
