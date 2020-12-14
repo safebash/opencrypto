@@ -1,5 +1,5 @@
-// OpenCrypto RSA Unit Test
-const crypto = new OpenCrypto()
+// OpenCrypto RSA Test
+
 let _rsaKeyPair = null
 let _rsaPemPrivateKey = null
 let _rsaPemPublicKey = null

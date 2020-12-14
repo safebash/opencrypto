@@ -1,4 +1,4 @@
-// OpenCrypto ECC Unit Test
+// OpenCrypto ECC Test
 
 let _ecKeyPair = null
 let _ecEncryptedPrivateKey = null

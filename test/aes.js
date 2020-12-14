@@ -1,4 +1,5 @@
-// OpenCrypto AES Unit Test
+// OpenCrypto AES Test
+const crypto = new OpenCrypto()
 
 let _sharedKey = null
 let _encryptedData = null

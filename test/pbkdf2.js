@@ -1,4 +1,4 @@
-// OpenCrypto PBKDF2 Unit Test
+// OpenCrypto PBKDF2 Test
 
 describe('password hashing', function () {
   it('should return hashed passphrase', function (done) {

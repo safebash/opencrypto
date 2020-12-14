@@ -1760,6 +1760,77 @@ export default class OpenCrypto {
 
   /**
     *
+    * Derives symmetric key from passphrase
+    * - passphrase        {String}        default: "undefined" passphrase string
+    * - salt              {ArrayBuffer}   default: "undefined" salt
+    * - iterations        {Number}        default: "64000"     number of iterations
+    * - hash              {String}        default: "SHA-512"   hash algorithm
+    * - length            {Number}        default: "256"       key length
+    */
+   derivePassphraseKey (passphrase, salt, iterations, hash, length) {
+    const self = this
+
+    iterations = (typeof iterations !== 'undefined') ? iterations : 64000
+    hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
+    length = (typeof length !== 'undefined') ? length : 256
+
+    return new Promise(function (resolve, reject) {
+      if (typeof passphrase !== 'string') {
+        throw new TypeError('Expected input of passphrase to be a String')
+      }
+
+      if (typeof salt !== 'object') {
+        throw new TypeError('Expected input of salt to be an ArrayBuffer')
+      }
+
+      if (typeof iterations !== 'number') {
+        throw new TypeError('Expected input of iterations to be a Number')
+      }
+
+      if (typeof hash !== 'string') {
+        throw new TypeError('Expected input of hash to be a String')
+      }
+
+      if (typeof length !== 'number') {
+        throw new TypeError('Expected input of length to be a Number')
+      }
+
+      cryptoApi.importKey(
+        'raw',
+        self.stringToArrayBuffer(passphrase),
+        {
+          name: 'PBKDF2'
+        },
+        false,
+        ['deriveKey']
+      ).then(function (baseKey) {
+        cryptoApi.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: iterations,
+            hash: hash
+          },
+          baseKey,
+          {
+            name: 'AES-GCM',
+            length: length
+          },
+          true,
+          ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+        ).then(function (derivedKey) {
+          resolve(derivedKey)
+        }).catch(function (err) {
+          reject(err)
+        })
+      }).catch(function (err) {
+        reject(err)
+      })
+    })
+  }
+
+  /**
+    *
     * Method for getting fingerprint of ECC, RSA or AES keys
     * - key         {CryptoKey}     default: "undefined"
     * - options     {Object}        default: { hash: 'SHA-512', isBuffer: false }

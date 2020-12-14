@@ -1,7 +1,7 @@
 # OpenCrypto
 [![npm](https://img.shields.io/npm/v/opencrypto.svg)](https://www.npmjs.com/package/opencrypto)
 [![Build Status](https://travis-ci.org/safebash/opencrypto.svg?branch=master)](https://travis-ci.org/safebash/opencrypto)
-[![npm](https://img.shields.io/npm/dm/opencrypto)](https://npmcharts.com/compare/opencrypto?minimal=true)
+[![npm](https://img.shields.io/npm/dt/opencrypto)](https://npmcharts.com/compare/opencrypto?minimal=true)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/safebash/opencrypto/master/LICENSE.md)
 [![Become a Patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://patreon.com/safebash)
 
@@ -272,7 +272,19 @@ crypt.decrypt(sharedKey, encryptedData).then(function (decryptedData) {
  * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
  * length: default: 256
  */
-crypt.hashPassphrase(passphrase, salt, iterations, hash, length).then(function (derivedKey) {
+crypt.hashPassphrase(passphrase, salt, iterations, hash, length).then(function (hashedPassphrase) {
+  console.log(hashedPassphrase)
+})
+
+// Derive key from passphrase
+/*
+ * passphrase: String | default: undefined
+ * salt: ArrayBuffer | default: undefined
+ * iterations: Integer | default: 64000
+ * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
+ * length: default: 256
+ */
+crypt.derivePassphraseKey(passphrase, salt, iterations, hash, length).then(function (derivedKey) {
   console.log(derivedKey)
 })
 
