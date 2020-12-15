@@ -1815,13 +1815,17 @@ export default class OpenCrypto {
     * - iterations        {Number}        default: "64000"     number of iterations
     * - hash              {String}        default: "SHA-512"   hash algorithm
     * - length            {Number}        default: "256"       key length
+    * - isExtractable     {Boolean}       default: "true"      is key extractable
+    * - usages            {Array}         default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" key usages
     */
-  derivePassphraseKey (passphrase, salt, iterations, hash, length) {
+  derivePassphraseKey (passphrase, salt, iterations, hash, length, isExtractable, usages) {
     const self = this
 
     iterations = (typeof iterations !== 'undefined') ? iterations : 64000
     hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     length = (typeof length !== 'undefined') ? length : 256
+    isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
+    usages = (typeof usages !== 'undefined') ? usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
 
     return new Promise(function (resolve, reject) {
       if (typeof passphrase !== 'string') {
@@ -1865,10 +1869,10 @@ export default class OpenCrypto {
             name: 'AES-GCM',
             length: length
           },
-          true,
-          ['encrypt', 'decrypt']
+          isExtractable,
+          keyUsages
         ).then(function (derivedKey) {
-          
+          resolve(derivedKey)
         }).catch(function (err) {
           reject(err)
         })
