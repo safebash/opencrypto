@@ -1466,7 +1466,7 @@ export default class OpenCrypto {
       }
 
       if (typeof encryptedKey !== 'string') {
-        throw new TypeError('Expected input of encryptedSharedKey to be a base64 String')
+        throw new TypeError('Expected input of encryptedKey to be a base64 String')
       }
 
       if (typeof options === 'undefined') {
@@ -1561,11 +1561,11 @@ export default class OpenCrypto {
         let encryptedKeyB64 = null
 
         if (unwrappingKey.algorithm.name === 'AES-GCM') {
-          ivB64 = encryptedSharedKey.substring(0, 16)
-          encryptedKeyB64 = encryptedSharedKey.substring(16)
+          ivB64 = encryptedKey.substring(0, 16)
+          encryptedKeyB64 = encryptedKey.substring(16)
         } else if (unwrappingKey.algorithm.name === 'AES-CBC') {
-          ivB64 = encryptedSharedKey.substring(0, 24)
-          encryptedKeyB64 = encryptedSharedKey.substring(24)
+          ivB64 = encryptedKey.substring(0, 24)
+          encryptedKeyB64 = encryptedKey.substring(24)
         } else {
           throw new TypeError('Unsupported unwrappingKey AES cipher mode')
         }
