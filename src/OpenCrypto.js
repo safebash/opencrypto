@@ -1815,17 +1815,23 @@ export default class OpenCrypto {
     * - iterations        {Number}        default: "64000"     number of iterations
     * - hash              {String}        default: "SHA-512"   hash algorithm
     * - length            {Number}        default: "256"       key length
+    * - keyUsages         {Array}         default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" key usages
     * - isExtractable     {Boolean}       default: "true"      is key extractable
-    * - usages            {Array}         default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" key usages
     */
-  derivePassphraseKey (passphrase, salt, iterations, hash, length, isExtractable, usages) {
+  derivePassphraseKey (passphrase, salt, iterations, options) {
     const self = this
 
     iterations = (typeof iterations !== 'undefined') ? iterations : 64000
-    hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
-    length = (typeof length !== 'undefined') ? length : 256
-    isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
-    usages = (typeof usages !== 'undefined') ? usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
+    options.length = (typeof length !== 'undefined') ? length : 256
+    options.cipher = (typeof cipher !== 'undefined') ? cipher : 'AES-GCM'
+    options.keyUsages = (typeof keyUsages !== 'undefined') ? keyUsages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+    options.isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
 
     return new Promise(function (resolve, reject) {
       if (typeof passphrase !== 'string') {
@@ -1840,12 +1846,24 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of iterations to be a Number')
       }
 
-      if (typeof hash !== 'string') {
-        throw new TypeError('Expected input of hash to be a String')
+      if (typeof options.hash !== 'string') {
+        throw new TypeError('Expected input of options.hash to be a String')
       }
 
-      if (typeof length !== 'number') {
-        throw new TypeError('Expected input of length to be a Number')
+      if (typeof options.length !== 'number') {
+        throw new TypeError('Expected input of options.length to be a Number')
+      }
+
+      if (typeof options.cipher !== 'string') {
+        throw new TypeError('Expected input of options.cipher to be a String')
+      }
+
+      if (typeof options.keyUsages !== 'object') {
+        throw new TypeError('Expected input of options.keyUsages to be an Array')
+      }
+
+      if (typeof options.isExtractable !== 'boolean') {
+        throw new TypeError('Expected input of options.isExtractable to be a Boolean')
       }
 
       cryptoApi.importKey(
@@ -1862,15 +1880,15 @@ export default class OpenCrypto {
             name: 'PBKDF2',
             salt: salt,
             iterations: iterations,
-            hash: hash
+            hash: options.hash
           },
           baseKey,
           {
-            name: 'AES-GCM',
-            length: length
+            name: options.cipher,
+            length: options.length
           },
-          isExtractable,
-          keyUsages
+          options.isExtractable,
+          options.keyUsages
         ).then(function (derivedKey) {
           resolve(derivedKey)
         }).catch(function (err) {
