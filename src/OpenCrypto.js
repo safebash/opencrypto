@@ -713,9 +713,10 @@ export default class OpenCrypto {
   /**
    *
    * Method for converting CryptoKey to base64
-   * - symmetricKey    {CryptoKey}   default: undefined
+   * - cryptoKey    {CryptoKey}   default: undefined
+   * - type         {String}      default: "raw"
    */
-  cryptoToBase64 (cryptoKey) {
+  cryptoToBase64 (cryptoKey, type) {
     const self = this
 
     return new Promise(function (resolve, reject) {
@@ -723,8 +724,14 @@ export default class OpenCrypto {
         throw new TypeError('Expected input to be a CryptoKey Object')
       }
 
+      type = (typeof type !== 'undefined') ? type : 'raw'
+
+      if (typeof type !== 'string') {
+        throw new TypeError('Expected input of type to be a String')
+      }
+
       cryptoApi.exportKey(
-        'raw',
+        type,
         cryptoKey
       ).then(function (exportedCryptoKey) {
         const b64Key = self.arrayBufferToBase64(exportedCryptoKey)
@@ -741,12 +748,12 @@ export default class OpenCrypto {
    * Method for converting base64 encoded symmetric key to CryptoKey
    * - b64Key          {CryptoKey}   default: undefined
    * - options         {Object}      default: (depends on algorithm)
+   * -- AES-GCM: { name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- AES-CBC: { name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
-   * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign'], isExtractable: true }
-   * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
-   * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
-   * -- AES-GCM: { name: 'AES-GCM', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-   * -- AES-CBC: { name: 'AES-CBC', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
+   * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign', 'verify'], isExtractable: true }
    */
   base64ToCrypto (b64Key, options) {
     const self = this
