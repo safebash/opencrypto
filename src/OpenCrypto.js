@@ -1381,8 +1381,9 @@ export default class OpenCrypto {
     * Supports AES-GCM, AES-CBC, RSA-OAEP
     * - wrappingKey        {CryptoKey}    default: "undefined"
     * - cryptoKey          {CryptoKey}    default: "undefined"
+    * - type               {String}       default: "raw"
     */
-  encryptKey (wrappingKey, cryptoKey) {
+  encryptKey (wrappingKey, cryptoKey, type) {
     const self = this
 
     return new Promise(function (resolve, reject) {
@@ -1406,7 +1407,7 @@ export default class OpenCrypto {
         }
 
         cryptoApi.wrapKey(
-          'raw',
+          type,
           cryptoKey,
           wrappingKey,
           {
@@ -1427,7 +1428,7 @@ export default class OpenCrypto {
         }
 
         cryptoApi.wrapKey(
-          'raw',
+          type,
           cryptoKey,
           wrappingKey,
           {
@@ -1454,8 +1455,12 @@ export default class OpenCrypto {
     * - unwrappingKey           {CryptoKey}         default: "undefined"
     * - encryptedKey            {base64 String}     default: "undefined"
     * - options                 {Object}            default: (depends on algorithm)
-    * -- AES-GCM: { keyCipher: 'AES-GCM', keyLength: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-    * -- RSA-OAEP: { keyCipher: 'AES-GCM', keyLength: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+    * -- AES-GCM: { type: 'raw', name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+    * -- AES-CBC: { type: 'raw', name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+    * -- ECDH: { type: "'pkcs8' or 'spki'", name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+    * -- ECDSA: { type: "'pkcs8' or 'spki'", name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
+    * -- RSA-OAEP: { type: "'pkcs8' or 'spki'", name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+    * -- RSA-PSS: { type: "'pkcs8' or 'spki'", name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign', 'verify'], isExtractable: true }
     */
   decryptKey (unwrappingKey, encryptedKey, options) {
     const self = this
@@ -1473,8 +1478,13 @@ export default class OpenCrypto {
         options = {}
       }
 
+      options.type = (typeof options.type !== 'undefined') ? options.type : 'raw'
       options.name = (typeof options.name !== 'undefined') ? options.name : 'AES-GCM'
       options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+
+      if (typeof options.type !== 'string') {
+        throw new TypeError('Expected input of options.type to be a String')
+      }
 
       if (typeof options.name !== 'string') {
         throw new TypeError('Expected input of options.name to be a String')
@@ -1574,7 +1584,7 @@ export default class OpenCrypto {
         const encryptedKeyAb = self.base64ToArrayBuffer(encryptedKeyB64)
 
         cryptoApi.unwrapKey(
-          'raw',
+          options.type,
           encryptedKeyAb,
           unwrappingKey,
           {
@@ -1598,7 +1608,7 @@ export default class OpenCrypto {
         const encryptedKeyAb = self.base64ToArrayBuffer(encryptedKey)
 
         cryptoApi.unwrapKey(
-          'raw',
+          options.type,
           encryptedKeyAb,
           unwrappingKey,
           {
