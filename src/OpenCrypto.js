@@ -713,29 +713,40 @@ export default class OpenCrypto {
   /**
    *
    * Method for converting CryptoKey to base64
-   * - cryptoKey    {CryptoKey}   default: undefined
-   * - type         {String}      default: "raw"
+   * - key          {CryptoKey}   default: undefined
+   * - type         {String}      default: "secret: 'raw'; private: 'pkcs8'; public: 'spki'"
    */
-  cryptoToBase64 (cryptoKey, type) {
+  cryptoToBase64 (key, type) {
     const self = this
 
-    return new Promise((resolve, reject) => {
-      if (Object.prototype.toString.call(cryptoKey) !== '[object CryptoKey]') {
-        throw new TypeError('Expected input to be a CryptoKey Object')
-      }
+    let keyType = null
+    switch (key.type) {
+      case 'secret' :
+        keyType = 'raw'
+        break
+      case 'private' :
+        keyType = 'pkcs8'
+        break
+      case 'public' :
+        keyType = 'spki'
+    }
 
-      type = (typeof type !== 'undefined') ? type : 'raw'
+    type = (typeof type !== 'undefined') ? type : keyType
+
+    return new Promise((resolve, reject) => {
+      if (Object.prototype.toString.call(key) !== '[object CryptoKey]') {
+        throw new TypeError('Expected input of key to be a CryptoKey Object')
+      }
 
       if (typeof type !== 'string') {
         throw new TypeError('Expected input of type to be a String')
       }
 
       cryptoApi.exportKey(
-        type,
-        cryptoKey
+        keyType,
+        key
       ).then(exportedCryptoKey => {
         const b64Key = self.arrayBufferToBase64(exportedCryptoKey)
-
         resolve(b64Key)
       }).catch(err => {
         reject(err)
