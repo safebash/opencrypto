@@ -64,12 +64,12 @@ export default class OpenCrypto {
   }
 
   /**
-    * BEGIN
-    * base64-arraybuffer
-    * GitHub @niklasvh
-    * Copyright (c) 2012 Niklas von Hertzen
-    * MIT License
-    */
+   * BEGIN
+   * base64-arraybuffer
+   * GitHub @niklasvh
+   * Copyright (c) 2012 Niklas von Hertzen
+   * MIT License
+   */
   encodeAb (arrayBuffer) {
     const bytes = new Uint8Array(arrayBuffer)
     const len = bytes.length
@@ -124,35 +124,41 @@ export default class OpenCrypto {
     return arrayBuffer
   }
   /**
-    * END
-    * base64-arraybuffer
-    */
+   * END
+   * base64-arraybuffer
+   */
 
   /**
-    * Encoding / Decoding
-    */
+   * Method for encoding ArrayBuffer into UTF-8 String
+   */
   arrayBufferToString (arrayBuffer) {
     if (typeof arrayBuffer !== 'object') {
-      throw new TypeError('Expected input to be an ArrayBuffer Object')
+      throw new TypeError('Expected input of arrayBuffer to be an ArrayBuffer Object')
     }
 
-    const decoder = new TextDecoder('utf-8') // eslint-disable-line
+    const decoder = new TextDecoder('utf-8')
     return decoder.decode(arrayBuffer)
   }
 
+  /**
+   * Method for decoding String to ArrayBuffer
+   */
   stringToArrayBuffer (str) {
     if (typeof str !== 'string') {
-      throw new TypeError('Expected input to be a String')
+      throw new TypeError('Expected input of str to be a String')
     }
 
-    const encoder = new TextEncoder('utf-8') // eslint-disable-line
+    const encoder = new TextEncoder('utf-8')
     const byteArray = encoder.encode(str)
     return byteArray.buffer
   }
 
+  /**
+   * Method for encoding ArrayBuffer to hexadecimal String
+   */
   arrayBufferToHexString (arrayBuffer) {
     if (typeof arrayBuffer !== 'object') {
-      throw new TypeError('Expected input to be an ArrayBuffer Object')
+      throw new TypeError('Expected input of arrayBuffer to be an ArrayBuffer Object')
     }
 
     const byteArray = new Uint8Array(arrayBuffer)
@@ -172,6 +178,9 @@ export default class OpenCrypto {
     return hexString
   }
 
+  /**
+   * Method for decoding hexadecimal String to ArrayBuffer
+   */
   hexStringToArrayBuffer (hexString) {
     if (typeof hexString !== 'string') {
       throw new TypeError('Expected input of hexString to be a String')
@@ -189,24 +198,37 @@ export default class OpenCrypto {
     return byteArray.buffer
   }
 
+  /**
+   * Method for encoding ArrayBuffer to base64 String
+   */
   arrayBufferToBase64 (arrayBuffer) {
     if (typeof arrayBuffer !== 'object') {
-      throw new TypeError('Expected input to be an ArrayBuffer Object')
+      throw new TypeError('Expected input of arrayBuffer to be an ArrayBuffer Object')
     }
 
     return this.encodeAb(arrayBuffer)
   }
 
+  /**
+   * Method for decoding base64 String to ArrayBuffer
+   */
   base64ToArrayBuffer (b64) {
     if (typeof b64 !== 'string') {
-      throw new TypeError('Expected input to be a base64 String')
+      throw new TypeError('Expected input of b64 to be a base64 String')
     }
 
     return this.decodeAb(b64)
   }
 
+  /**
+   * Method for encoding decimal Number to hexadecimal String
+   */
   decimalToHex (d, unsigned) {
     unsigned = (typeof unsigned !== 'undefined') ? unsigned : false
+
+    if (typeof unsigned !== 'boolean') {
+      throw new TypeError('Expected input of unsigned to be a Boolean')
+    }
 
     let h = null
     if (typeof d === 'number') {
@@ -220,9 +242,14 @@ export default class OpenCrypto {
     } else if (typeof d === 'string') {
       h = (d.length / 2).toString(16)
       return h.length % 2 ? '0' + h : h
+    } else {
+      throw new TypeError('Expected input of d to be a Number or String')
     }
   }
 
+  /**
+   * Method for addition of new lines into PEM encoded key
+   */
   addNewLines (str) {
     let finalString = ''
     while (str.length > 0) {
@@ -233,15 +260,22 @@ export default class OpenCrypto {
     return finalString
   }
 
+  /**
+   * Method that removes lines from PEM encoded key
+   */
   removeLines (str) {
     return str.replace(/\r?\n|\r/g, '')
   }
 
-  toAsn1 (wrappedKey, salt, iv, iterations, hash, cipher, keyLength) {
+  /**
+   * Method that encodes ASN.1 information into PEM encoded key
+   */
+  toAsn1 (wrappedKey, salt, iv, iterations, hash, cipher, length) {
     wrappedKey = this.arrayBufferToHexString(wrappedKey)
     salt = this.arrayBufferToHexString(salt)
     iv = this.arrayBufferToHexString(iv)
     iterations = this.decimalToHex(iterations, true)
+
     const opt = {}
 
     switch (hash) {
@@ -260,29 +294,29 @@ export default class OpenCrypto {
 
     switch (cipher) {
       case 'AES-GCM' :
-        if (keyLength === 256) {
+        if (length === 256) {
           opt.CIPHER_OID = AES256GCM_OID
-        } else if (keyLength === 192) {
+        } else if (length === 192) {
           opt.CIPHER_OID = AES192GCM_OID
-        } else if (keyLength === 128) {
+        } else if (length === 128) {
           opt.CIPHER_OID = AES128GCM_OID
         }
         break
       case 'AES-CBC' :
-        if (keyLength === 256) {
+        if (length === 256) {
           opt.CIPHER_OID = AES256CBC_OID
-        } else if (keyLength === 192) {
+        } else if (length === 192) {
           opt.CIPHER_OID = AES192CBC_OID
-        } else if (keyLength === 128) {
+        } else if (length === 128) {
           opt.CIPHER_OID = AES128CBC_OID
         }
         break
       case 'AES-CFB' :
-        if (keyLength === 256) {
+        if (length === 256) {
           opt.CIPHER_OID = AES256CFB_OID
-        } else if (keyLength === 192) {
+        } else if (length === 192) {
           opt.CIPHER_OID = AES192CFB_OID
-        } else if (keyLength === 128) {
+        } else if (length === 128) {
           opt.CIPHER_OID = AES128CFB_OID
         }
     }
@@ -313,13 +347,16 @@ export default class OpenCrypto {
     return pemKey
   }
 
+  /**
+   * Method that retrieves ASN.1 encoded information from PEM encoded key
+   */
   fromAsn1 (pem) {
-    const opt = {}
     pem = this.removeLines(pem)
     pem = pem.replace('-----BEGIN ENCRYPTED PRIVATE KEY-----', '')
     pem = pem.replace('-----END ENCRYPTED PRIVATE KEY-----', '')
     pem = this.base64ToArrayBuffer(pem)
 
+    const opt = {}
     const hex = this.arrayBufferToHexString(pem)
     opt.data = hex
 
@@ -331,39 +368,39 @@ export default class OpenCrypto {
 
     if (opt.data.includes(AES256GCM_OID)) {
       opt.cipher = 'AES-GCM'
-      opt.keyLength = 256
+      opt.length = 256
       opt.ivBegin = opt.data.indexOf(AES256GCM_OID) + 24
     } else if (opt.data.includes(AES192GCM_OID)) {
       opt.cipher = 'AES-GCM'
-      opt.keyLength = 192
+      opt.length = 192
       opt.ivBegin = opt.data.indexOf(AES192GCM_OID) + 24
     } else if (opt.data.includes(AES128GCM_OID)) {
       opt.cipher = 'AES-GCM'
-      opt.keyLength = 128
+      opt.length = 128
       opt.ivBegin = opt.data.indexOf(AES128GCM_OID) + 24
     } else if (opt.data.includes(AES256CBC_OID)) {
       opt.cipher = 'AES-CBC'
-      opt.keyLength = 256
+      opt.length = 256
       opt.ivBegin = opt.data.indexOf(AES256CBC_OID) + 24
     } else if (opt.data.includes(AES192CBC_OID)) {
       opt.cipher = 'AES-CBC'
-      opt.keyLength = 192
+      opt.length = 192
       opt.ivBegin = opt.data.indexOf(AES192CBC_OID) + 24
     } else if (opt.data.includes(AES128CBC_OID)) {
       opt.cipher = 'AES-CBC'
-      opt.keyLength = 128
+      opt.length = 128
       opt.ivBegin = opt.data.indexOf(AES128CBC_OID) + 24
     } else if (opt.data.includes(AES256CFB_OID)) {
       opt.cipher = 'AES-CFB'
-      opt.keyLength = 256
+      opt.length = 256
       opt.ivBegin = opt.data.indexOf(AES256CFB_OID) + 24
     } else if (opt.data.includes(AES192CFB_OID)) {
       opt.cipher = 'AES-CFB'
-      opt.keyLength = 192
+      opt.length = 192
       opt.ivBegin = opt.data.indexOf(AES192CFB_OID) + 24
     } else if (opt.data.includes(AES128CFB_OID)) {
       opt.cipher = 'AES-CFB'
-      opt.keyLength = 128
+      opt.length = 128
       opt.ivBegin = opt.data.indexOf(AES128CFB_OID) + 22
     }
 
@@ -399,7 +436,7 @@ export default class OpenCrypto {
       salt: this.hexStringToArrayBuffer(opt.salt),
       iv: this.hexStringToArrayBuffer(opt.iv),
       cipher: opt.cipher,
-      keyLength: opt.keyLength,
+      length: opt.length,
       hash: opt.hash,
       iter: opt.iter,
       encryptedData: this.hexStringToArrayBuffer(opt.encryptedData)
@@ -409,10 +446,9 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Converts asymmetric private key from CryptoKey to PEM format
-    * - privateKey    {CryptoKey}     default: "undefined" CryptoKey generated by WebCrypto API
-    */
+   * Method that converts asymmetric private key from CryptoKey to PEM format
+   * @param {CryptoKey} privateKey default: "undefined"
+   */
   cryptoPrivateToPem (privateKey) {
     const self = this
 
@@ -437,39 +473,39 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Converts asymmetric private key from PEM to CryptoKey format
-    * - pem              {String}     default: "undefined" private key in PEM format
-    * - options          {Object}     default: (depends on algorithm)
-    * -- ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
-    * -- ECDSA: { name: 'ECDSA', usages: ['sign'], isExtractable: true }
-    * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
-    * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
-    */
+   * Method that converts asymmetric private key from PEM to CryptoKey format
+   * @param {String} pem default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+   * -- ECDSA: { name: 'ECDSA', usages: ['sign'], isExtractable: true }
+   * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
+   */
   pemPrivateToCrypto (pem, options) {
     const self = this
 
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+
     return new Promise((resolve, reject) => {
-      if (typeof options === 'undefined') {
-        options = {}
-      }
-
-      options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
-
       if (typeof pem !== 'string') {
         throw new TypeError('Expected input of pem to be a String')
       }
 
       if (typeof options.isExtractable !== 'boolean') {
-        throw new TypeError('Expected input of options.isExtractable to be a String')
+        throw new TypeError('Expected input of options.isExtractable to be a Boolean')
       }
 
       pem = pem.replace('-----BEGIN PRIVATE KEY-----', '')
       pem = pem.replace('-----END PRIVATE KEY-----', '')
+
       const b64 = self.removeLines(pem)
       const arrayBuffer = self.base64ToArrayBuffer(b64)
       const hex = self.arrayBufferToHexString(arrayBuffer)
-      let opt = null
+      const keyOptions = {}
 
       if (hex.includes(EC_OID)) {
         options.name = (typeof options.name !== 'undefined') ? options.name : 'ECDH'
@@ -491,22 +527,20 @@ export default class OpenCrypto {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
 
           if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be a String')
+            throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else if (options.name === 'ECDSA') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
           if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be a String')
+            throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else {
-          throw new TypeError('Invalid algorithm name')
+          throw new TypeError('Expected input of options.name is not a valid algorithm name')
         }
 
-        opt = {
-          name: options.name,
-          namedCurve: curve
-        }
+        keyOptions.name = options.name
+        keyOptions.namedCurve = curve
       } else if (hex.includes(RSA_OID)) {
         options.name = (typeof options.name !== 'undefined') ? options.name : 'RSA-OAEP'
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
@@ -529,26 +563,23 @@ export default class OpenCrypto {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
           if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be a String')
+            throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else {
-          throw new TypeError('Invalid algorithm name')
+          throw new TypeError('Expected input of options.name is not a valid algorithm name')
         }
 
-        opt = {
-          name: options.name,
-          hash: {
-            name: options.hash
-          }
-        }
+        keyOptions.name = options.name
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
       } else {
-        throw new TypeError('Invalid private key')
+        throw new TypeError('Expected input of pem is not a valid private key')
       }
 
       cryptoApi.importKey(
         'pkcs8',
         arrayBuffer,
-        opt,
+        keyOptions,
         options.isExtractable,
         options.usages
       ).then(importedPrivateKey => {
@@ -560,16 +591,15 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Converts asymmetric public key from CryptoKey to PEM format
-    * - publicKey    {CryptoKey}    default: "undefined" CryptoKey generated by WebCrypto API
-    */
+   * Method that converts asymmetric public key from CryptoKey to PEM format
+   * @param {CryptoKey} publicKey default: "undefined"
+   */
   cryptoPublicToPem (publicKey) {
     const self = this
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
-        throw new TypeError('Expected input to be a CryptoKey Object')
+        throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
       cryptoApi.exportKey(
@@ -588,39 +618,39 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Converts asymmetric public key from PEM to CryptoKey
-    * - publicKey       {String}      default: "undefined" PEM public key
-    * - options         {Object}      default: (depends on algorithm)
-    * -- ECDH: { name: 'ECDH', usages: [], isExtractable: true }
-    * -- ECDSA: { name: 'ECDSA', usages: ['verify'], isExtractable: true }
-    * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'wrapKey'], isExtractable: true }
-    * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['verify'], isExtractable: true }
-    */
+   * Method that converts asymmetric public key from PEM to CryptoKey format
+   * @param {String} publicKey default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDH: { name: 'ECDH', usages: [], isExtractable: true }
+   * -- ECDSA: { name: 'ECDSA', usages: ['verify'], isExtractable: true }
+   * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'wrapKey'], isExtractable: true }
+   * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['verify'], isExtractable: true }
+   */
   pemPublicToCrypto (pem, options) {
     const self = this
 
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+
     return new Promise((resolve, reject) => {
-      if (typeof options === 'undefined') {
-        options = {}
-      }
-
-      options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
-
       if (typeof pem !== 'string') {
         throw new TypeError('Expected input of pem to be a String')
       }
 
       if (typeof options.isExtractable !== 'boolean') {
-        throw new TypeError('Expected input of options.isExtractable to be a String')
+        throw new TypeError('Expected input of options.isExtractable to be a Boolean')
       }
 
       pem = pem.replace('-----BEGIN PUBLIC KEY-----', '')
       pem = pem.replace('-----END PUBLIC KEY-----', '')
+
       const b64 = self.removeLines(pem)
       const arrayBuffer = self.base64ToArrayBuffer(b64)
       const hex = self.arrayBufferToHexString(arrayBuffer)
-      let opt = null
+      const keyOptions = {}
 
       if (hex.includes(EC_OID)) {
         options.name = (typeof options.name !== 'undefined') ? options.name : 'ECDH'
@@ -642,22 +672,20 @@ export default class OpenCrypto {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : []
 
           if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be a String')
+            throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else if (options.name === 'ECDSA') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['verify']
 
           if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be a String')
+            throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else {
-          throw new TypeError('Invalid algorithm name')
+          throw new TypeError('Expected input of options.name is not a valid algorithm name')
         }
 
-        opt = {
-          name: options.name,
-          namedCurve: curve
-        }
+        keyOptions.name = options.name
+        keyOptions.namedCurve = curve
       } else if (hex.includes(RSA_OID)) {
         options.name = (typeof options.name !== 'undefined') ? options.name : 'RSA-OAEP'
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
@@ -683,27 +711,24 @@ export default class OpenCrypto {
             throw new TypeError('Expected input of options.usages to be an Array')
           }
         } else {
-          throw new TypeError('Invalid algorithm name')
+          throw new TypeError('Expected input of options.name is not a valid algorithm name')
         }
 
-        opt = {
-          name: options.name,
-          hash: {
-            name: options.hash
-          }
-        }
+        keyOptions.name = options.name
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
       } else {
-        throw new TypeError('Invalid public key')
+        throw new TypeError('Expected input of pem is not a valid public key')
       }
 
       cryptoApi.importKey(
         'spki',
         arrayBuffer,
-        opt,
+        keyOptions,
         options.isExtractable,
         options.usages
-      ).then(importedKey => {
-        resolve(importedKey)
+      ).then(importedPublicKey => {
+        resolve(importedPublicKey)
       }).catch(err => {
         reject(err)
       })
@@ -711,10 +736,9 @@ export default class OpenCrypto {
   }
 
   /**
-   *
-   * Method for converting CryptoKey to base64
-   * - key          {CryptoKey}   default: undefined
-   * - type         {String}      default: "secret: 'raw'; private: 'pkcs8'; public: 'spki'"
+   * Method that converts CryptoKey to base64
+   * @param {CryptoKey} key default: "undefined"
+   * @param {String} type default: "secret: 'raw'; private: 'pkcs8'; public: 'spki'"
    */
   cryptoToBase64 (key, type) {
     const self = this
@@ -745,8 +769,8 @@ export default class OpenCrypto {
       cryptoApi.exportKey(
         keyType,
         key
-      ).then(exportedCryptoKey => {
-        const b64Key = self.arrayBufferToBase64(exportedCryptoKey)
+      ).then(exportedKey => {
+        const b64Key = self.arrayBufferToBase64(exportedKey)
         resolve(b64Key)
       }).catch(err => {
         reject(err)
@@ -755,10 +779,9 @@ export default class OpenCrypto {
   }
 
   /**
-   *
-   * Method for converting base64 encoded symmetric key to CryptoKey
-   * - b64Key          {CryptoKey}   default: undefined
-   * - options         {Object}      default: (depends on algorithm)
+   * Method that converts base64 encoded key to CryptoKey
+   * @param {CryptoKey} b64Key default: "undefined"
+   * @param {Object} options default: depends on algorithm below
    * -- AES-GCM: { name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    * -- AES-CBC: { name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
@@ -769,17 +792,17 @@ export default class OpenCrypto {
   base64ToCrypto (b64Key, options) {
     const self = this
 
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.name = (typeof options.name !== 'undefined') ? options.name : 'AES-GCM'
+    options.isExtractable = (typeof options.isExtractable !== 'undefined' ) ? options.isExtractable : true
+
     return new Promise((resolve, reject) => {
       if (typeof b64Key !== 'string') {
-        throw new TypeError('Expected input to be a base64 String')
+        throw new TypeError('Expected input of b64Key to be a base64 String')
       }
-
-      if (typeof options === 'undefined') {
-        options = {}
-      }
-
-      options.name = (typeof options.name !== 'undefined') ? options.name : 'AES-GCM'
-      options.isExtractable = (typeof options.isExtractable !== 'undefined' ) ? options.isExtractable : true
 
       if (typeof options.name !== 'string') {
         throw new TypeError('Expected input of options.name to be a String')
@@ -793,8 +816,13 @@ export default class OpenCrypto {
       keyOptions.name = options.name
 
       if (options.name === 'AES-GCM' || options.name === 'AES-CBC') {
+        options.type = (typeof options.type !== 'undefined') ? options.type : 'raw'
         options.length = (typeof options.length !== 'undefined') ? options.length : 256
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+
+        if (typeof options.type !== 'string') {
+          throw new TypeError('Expected input of options.type to be a String')
+        }
 
         if (typeof options.length !== 'number') {
           throw new TypeError('Expected input of options.length to be a Number')
@@ -804,10 +832,13 @@ export default class OpenCrypto {
           throw new TypeError('Expected input of options.usages to be an Array')
         }
       } else if (options.name === 'ECDH') {
+        options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
 
-        keyOptions.namedCurve = options.namedCurve
+        if (typeof options.type !== 'string') {
+          throw new TypeError('Expected input of options.type to be a String')
+        }
 
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
@@ -816,11 +847,16 @@ export default class OpenCrypto {
         if (typeof options.usages !== 'object') {
           throw new TypeError('Expected input of options.usages to be an Array')
         }
+
+        keyOptions.namedCurve = options.namedCurve
       } else if (options.name === 'ECDSA') {
+        options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        keyOptions.namedCurve = options.namedCurve
+        if (typeof options.type !== 'string') {
+          throw new TypeError('Expected input of options.type to be a String')
+        }
 
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
@@ -829,12 +865,16 @@ export default class OpenCrypto {
         if (typeof options.usages !== 'object') {
           throw new TypeError('Expected input of options.usages to be an Array')
         }
+
+        keyOptions.namedCurve = options.namedCurve
       } else if (options.name === 'RSA-OAEP') {
+        options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
 
-        keyOptions.hash = {}
-        keyOptions.hash.name = options.hash
+        if (typeof options.type !== 'string') {
+          throw new TypeError('Expected input of options.type to be a String')
+        }
 
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
@@ -843,12 +883,17 @@ export default class OpenCrypto {
         if (typeof options.usages !== 'object') {
           throw new TypeError('Expected input of options.usages to be an Array')
         }
+
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
       } else if (options.name === 'RSA-PSS') {
+        options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        keyOptions.hash = {}
-        keyOptions.hash.name = options.hash
+        if (typeof options.type !== 'string') {
+          throw new TypeError('Expected input of options.type to be a String')
+        }
 
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
@@ -857,20 +902,23 @@ export default class OpenCrypto {
         if (typeof options.usages !== 'object') {
           throw new TypeError('Expected input of options.usages to be an Array')
         }
+
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
       } else {
-        throw new TypeError('Unsupported CryptoKey type')
+        throw new TypeError('Expected input of options.name is not a valid algorithm name')
       }
 
       const abKey = self.base64ToArrayBuffer(b64Key)
 
       cryptoApi.importKey(
-        'raw',
+        options.type,
         abKey,
         keyOptions,
         options.isExtractable,
         options.usages
-      ).then(importedCryptoKey => {
-        resolve(importedCryptoKey)
+      ).then(importedKey => {
+        resolve(importedKey)
       }).catch(err => {
         reject(err)
       })
@@ -878,13 +926,12 @@ export default class OpenCrypto {
   }
 
    /**
-    *
-    * Method for generating asymmetric RSA-OAEP key pair
-    * - modulusLength   {Integer}     default: "2048" 2048 bits key pair
-    * - hash            {String}      default: "SHA-512" uses SHA-512 hash algorithm as default
-    * - paddingScheme   {String}      default: "RSA-OAEP" uses RSA-OAEP padding scheme
-    * - usages          {Array}       default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" contains all available options at default
-    * - isExtractable   {Boolean}     default: "true" whether the key is extractable
+    * Method that generates asymmetric RSA-OAEP key pair
+    * @param {Integer} modulusLength default: "2048"
+    * @param {String} hash default: "SHA-512"
+    * @param {String} paddingScheme default: "RSA-OAEP"
+    * @param {Array} usages default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']"
+    * @param {Boolean} isExtractable default: "true"
     */
    getRSAKeyPair (modulusLength, hash, paddingScheme, usages, isExtractable) {
     modulusLength = (typeof modulusLength !== 'undefined') ? modulusLength : 2048
@@ -932,18 +979,16 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Encrypts data using asymmetric encryption
-    * Uses RSA-OAEP for asymmetric key as default.
-    * - publicKey    {CryptoKey}      default: "undefined"
-    * - dataAb       {ArrayBuffer}    default: "undefined"
-    */
+   * Method that encrypts data using asymmetric encryption
+   * @param {CryptoKey} publicKey default: "undefined"
+   * @param {ArrayBuffer} dataAb default: "undefined"
+   */
    rsaEncrypt (publicKey, dataAb) {
     const self = this
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
-        throw new TypeError('Expected input of privateKey to be a CryptoKey of type public')
+        throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
       if (typeof dataAb !== 'object') {
@@ -956,8 +1001,9 @@ export default class OpenCrypto {
         },
         publicKey,
         dataAb
-      ).then(encrypted => {
-        resolve(self.arrayBufferToBase64(encrypted))
+      ).then(encryptedDataAb => {
+        const encryptedDatab64 = self.arrayBufferToBase64(encryptedDataAb)
+        resolve(encryptedDatab64)
       }).catch(err => {
         reject(err)
       })
@@ -965,32 +1011,32 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Decrypts data using asymmetric encryption
-    * Uses RSA-OAEP for asymmetric key as default.
-    * - privateKey        {CryptoKey}     default: "undefined"
-    * - encryptedData     {base64}        default: "undefined"
-    */
+   * Method that decrypts data using asymmetric encryption
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {String} encryptedData default: "undefined"
+   */
   rsaDecrypt (privateKey, encryptedData) {
     const self = this
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
-        throw new TypeError('Expected input of privateKey to be a CryptoKey of type private')
+        throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
       }
 
       if (typeof encryptedData !== 'string') {
-        throw new TypeError('Expected input of encryptedData to be a String')
+        throw new TypeError('Expected input of encryptedData to be a base64 String')
       }
+
+      const encryptedDataAb = self.base64ToArrayBuffer(encryptedData)
 
       cryptoApi.decrypt(
         {
           name: 'RSA-OAEP'
         },
         privateKey,
-        self.base64ToArrayBuffer(encryptedData)
-      ).then(decrypted => {
-        resolve(decrypted)
+        encryptedDataAb
+      ).then(decryptedDataAb => {
+        resolve(decryptedDataAb)
       }).catch(err => {
         reject(err)
       })
@@ -998,13 +1044,12 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Method for generating asymmetric Elliptic Curve Diffie-Hellman key pair
-    * - curve           {String}      default: "P-256" uses P-256 curve
-    * - type            {String}      default: "ECDH" uses Elliptic Curve Diffie-Hellman
-    * - usages          {Array}       default: "['deriveKey', 'deriveBits']" contains all available options at default
-    * - isExtractable   {Boolean}     default: "true" whether the key is extractable
-    */
+   * Method that generates asymmetric Elliptic Curve Diffie-Hellman key pair
+   * @param {String} curve default: "P-256"
+   * @param {String} type default: "ECDH"
+   * @param {Array} usages default: "['deriveKey', 'deriveBits']"
+   * @param {Boolean} isExtractable default: "true"
+   */
   getECKeyPair (curve, type, usages, isExtractable) {
     curve = (typeof curve !== 'undefined') ? curve : 'P-256'
     type = (typeof type !== 'undefined') ? type : 'ECDH'
@@ -1044,26 +1089,25 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Encrypts asymmetric private key using passphrase to enable storage in unsecure environment
-    * - privateKey        {CryptoKey}     default: "undefined" private key in CryptoKey format
-    * - passphrase        {String}        default: "undefined" any passphrase string
-    * - iterations        {Number}        default: "64000"
-    * - hash              {String}        default: "SHA-512"
-    * - cipher            {String}        default: "AES-GCM"
-    * - keyLength         {Number}        default: "256"
-    */
-  encryptPrivateKey (privateKey, passphrase, iterations, hash, cipher, keyLength) {
+   * Method that encrypts asymmetric private key using passphrase to enable storage in unsecure environment
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {String} passphrase default: "undefined"
+   * @param {Number} iterations default: "64000"
+   * @param {String} hash default: "SHA-512"
+   * @param {String} cipher default: "AES-GCM"
+   * @param {Number} length default: "256"
+   */
+  encryptPrivateKey (privateKey, passphrase, iterations, hash, cipher, length) {
     const self = this
 
     iterations = (typeof iterations !== 'undefined') ? iterations : 64000
     hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     cipher = (typeof cipher !== 'undefined') ? cipher : 'AES-GCM'
-    keyLength = (typeof keyLength !== 'undefined') ? keyLength : 256
+    length = (typeof length !== 'undefined') ? length : 256
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
-        throw new TypeError('Expected input of privateKey to be a CryptoKey Object')
+        throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
       }
 
       if (typeof passphrase !== 'string') {
@@ -1082,25 +1126,30 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of cipher to be a String')
       }
 
-      if (typeof keyLength !== 'number') {
-        throw new TypeError('Expected input of keyLength to be a Number')
+      if (typeof length !== 'number') {
+        throw new TypeError('Expected input of length to be a Number')
       }
 
       let ivLength = null
-      if (cipher === 'AES-GCM') {
-        ivLength = 12
-      } else if (cipher === 'AES-CBC') {
-        ivLength = 16
-      } else if (cipher === 'AES-CFB') {
-        ivLength = 16
+      switch (cipher) {
+        case 'AES-GCM' :
+          ivLength = 12
+          break
+        case 'AES-CBC' :
+          ivLength = 16
+          break
+        case 'AES-CFB' :
+          ivLength = 16
+          break
       }
 
       const salt = cryptoLib.getRandomValues(new Uint8Array(16))
       const iv = cryptoLib.getRandomValues(new Uint8Array(ivLength))
+      const passphraseAb = self.stringToArrayBuffer(passphrase)
 
       cryptoApi.importKey(
         'raw',
-        self.stringToArrayBuffer(passphrase),
+        passphraseAb,
         {
           name: 'PBKDF2'
         },
@@ -1117,9 +1166,9 @@ export default class OpenCrypto {
           baseKey,
           {
             name: cipher,
-            length: keyLength
+            length: length
           },
-          true,
+          false,
           ['wrapKey']
         ).then(derivedKey => {
           cryptoApi.wrapKey(
@@ -1132,7 +1181,7 @@ export default class OpenCrypto {
               tagLength: 128
             }
           ).then(wrappedKey => {
-            const pemKey = self.toAsn1(wrappedKey, salt, iv, iterations, hash, cipher, keyLength)
+            const pemKey = self.toAsn1(wrappedKey, salt, iv, iterations, hash, cipher, length)
             resolve(pemKey)
           }).catch(err => {
             reject(err)
@@ -1147,76 +1196,26 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Decrypts asymmetric private key using passphrase
-    * - encryptedPrivateKey     {base64}     default: "undefined" private key in PKCS #8 format
-    * - passphrase              {String}     default: "undefined" any passphrase string
-    * - options                 {Object}     default: (depends on algorithm)
-    * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
-    * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign'], isExtractable: true }
-    * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
-    * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
-    */
+   * Method that decrypts asymmetric private key using passphrase
+   * @param {String} encryptedPrivateKey default: "undefined"
+   * @param {String} passphrase default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+   * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign'], isExtractable: true }
+   * -- RSA-OAEP: { name: 'RSA-OAEP', hash: 'SHA-512', usages: ['decrypt', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { name: 'RSA-PSS', hash: 'SHA-512', usages: ['sign'], isExtractable: true }
+   */
   decryptPrivateKey (encryptedPrivateKey, passphrase, options) {
     const self = this
-    const epki = this.fromAsn1(encryptedPrivateKey)
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.name = (typeof options.name !== 'undefined') ? options.name : 'ECDH'
+    options.isExtractable = (typeof options.isExtractable !== 'undefined' ) ? options.isExtractable : true
 
     return new Promise((resolve, reject) => {
-      if (typeof options === 'undefined') {
-        options = {}
-      }
-
-      const keyOptions = {}
-  
-      options.name = (typeof options.name !== 'undefined') ? options.name : 'ECDH'
-      options.isExtractable = (typeof options.isExtractable !== 'undefined' ) ? options.isExtractable : true
-
-      keyOptions.name = options.name
-  
-      if (options.name === 'ECDH') {
-        options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
-        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
-
-        keyOptions.namedCurve = options.namedCurve
-
-        if (typeof options.namedCurve !== 'string') {
-          throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-      } else if (options.name === 'ECDSA') {
-        options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
-        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
-
-        keyOptions.namedCurve = options.namedCurve
-
-        if (typeof options.namedCurve !== 'string') {
-          throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-      } else if (options.name === 'RSA-OAEP') {
-        options.hash = (typeof options.hash !== 'undefined') ? options.hash : {}
-        options.hash.name = (typeof options.hash.name !== 'undefined') ? options.hash.name : 'SHA-512'
-        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
-
-        keyOptions.hash = {}
-        keyOptions.hash.name = options.hash.name
-
-        if (typeof options.hash.name !== 'string') {
-          throw new TypeError('Expected input of options.hash.name to be a base64 String')
-        }
-      } else if (options.name === 'RSA-PSS') {
-        options.hash = (typeof options.hash !== 'undefined') ? options.hash : {}
-        options.hash.name = (typeof options.hash.name !== 'undefined') ? options.hash.name : 'SHA-512'
-        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
-
-        keyOptions.hash = {}
-        keyOptions.hash.name = options.hash.name
-
-        if (typeof options.hash.name !== 'string') {
-          throw new TypeError('Expected input of options.hash.name to be a base64 String')
-        }
-      } else {
-        throw new TypeError('Unsupported encryptedPrivateKey')
-      }
-
       if (typeof encryptedPrivateKey !== 'string') {
         throw new TypeError('Expected input of encryptedPrivateKey to be a base64 String')
       }
@@ -1225,17 +1224,77 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of passphrase to be a String')
       }
 
-      if (typeof options.usages !== 'object') {
-        throw new TypeError('Expected input of options.usages to be a String')
-      }
-
       if (typeof options.isExtractable !== 'boolean') {
         throw new TypeError('Expected input of options.isExtractable to be a Boolean')
       }
 
+      const epki = this.fromAsn1(encryptedPrivateKey)
+      const keyOptions = {}
+      keyOptions.name = options.name
+  
+      if (options.name === 'ECDH') {
+        options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
+        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
+
+        if (typeof options.namedCurve !== 'string') {
+          throw new TypeError('Expected input of options.namedCurve to be a String')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
+        }
+
+        keyOptions.namedCurve = options.namedCurve
+      } else if (options.name === 'ECDSA') {
+        options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
+        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
+
+        if (typeof options.namedCurve !== 'string') {
+          throw new TypeError('Expected input of options.namedCurve to be a String')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
+        }
+
+        keyOptions.namedCurve = options.namedCurve
+      } else if (options.name === 'RSA-OAEP') {
+        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
+        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
+
+        if (typeof options.hash !== 'string') {
+          throw new TypeError('Expected input of options.hash to be a String')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
+        }
+
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
+      } else if (options.name === 'RSA-PSS') {
+        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
+        options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
+
+        if (typeof options.hash !== 'string') {
+          throw new TypeError('Expected input of options.hash to be a String')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
+        }
+
+        keyOptions.hash = {}
+        keyOptions.hash.name = options.hash
+      } else {
+        throw new TypeError('Expected input of encryptedPrivateKey is not a valid encrypted private key')
+      }
+
+      const passphraseAb = self.stringToArrayBuffer(passphrase)
+
       cryptoApi.importKey(
         'raw',
-        self.stringToArrayBuffer(passphrase),
+        passphraseAb,
         {
           name: 'PBKDF2'
         },
@@ -1252,7 +1311,7 @@ export default class OpenCrypto {
           baseKey,
           {
             name: epki.cipher,
-            length: epki.keyLength
+            length: epki.length
           },
           false,
           ['unwrapKey']
@@ -1284,11 +1343,10 @@ export default class OpenCrypto {
   }
 
   /**
-   * 
-   * ECDH Key Agreement
-   * - publicKey          {CryptoKey}     default: "undefined"
-   * - privateKey         {CryptoKey}     default: "undefined"
-   * - options            {Object}        default: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * Method that performs ECDH key agreement
+   * @param {CryptoKey} publicKey default: "undefined"
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {Object} options default: "{ bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", cipher: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
    */
   keyAgreement (privateKey, publicKey, options) {
     if (typeof options === 'undefined') {
@@ -1299,18 +1357,18 @@ export default class OpenCrypto {
     options.hkdfHash = (typeof options.hkdfHash !== 'undefined') ? options.hkdfHash : 'SHA-512'
     options.hkdfSalt = (typeof options.hkdfSalt !== 'undefined') ? options.hkdfSalt : new Uint8Array()
     options.hkdfInfo = (typeof options.hkdfInfo !== 'undefined') ? options.hkdfInfo : new Uint8Array()
-    options.keyCipher = (typeof options.keyCipher !== 'undefined') ? options.keyCipher : 'AES-GCM'
-    options.keyLength = (typeof options.keyLength !== 'undefined') ? options.keyLength : 256
+    options.cipher = (typeof options.cipher !== 'undefined') ? options.cipher : 'AES-GCM'
+    options.length = (typeof options.length !== 'undefined') ? options.length : 256
     options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'unwrapKey', 'wrapKey']
     options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
-        throw new TypeError('Expected input of privateKey to be a CryptoKey of type private')
+        throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
       }
 
       if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
-        throw new TypeError('Expected input of publicKey to be a CryptoKey of type public')
+        throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
       if (typeof options.bitLength !== 'number') {
@@ -1329,12 +1387,12 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of options.hkdfInfo to be an ArrayBuffer')
       }
 
-      if (typeof options.keyCipher !== 'string') {
-        throw new TypeError('Expected input of options.keyCipher to be a String')
+      if (typeof options.cipher !== 'string') {
+        throw new TypeError('Expected input of options.cipher to be a String')
       }
 
-      if (typeof options.keyLength !== 'number') {
-        throw new TypeError('Expected input of options.keyLength to be a Number')
+      if (typeof options.length !== 'number') {
+        throw new TypeError('Expected input of options.length to be a Number')
       }
 
       if (typeof options.usages !== 'object') {
@@ -1374,13 +1432,13 @@ export default class OpenCrypto {
             },
             derivedKey,
             {
-              name: options.keyCipher,
-              length: options.keyLength
+              name: options.cipher,
+              length: options.length
             },
             options.isExtractable,
             options.usages
-          ).then(symmetricKey => {
-            resolve(symmetricKey)
+          ).then(sharedKey => {
+            resolve(sharedKey)
           }).catch(err => {
             reject(err)
           })
@@ -1394,22 +1452,20 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Encrypts symmetric / shared key
-    * Supports AES-GCM, AES-CBC, RSA-OAEP
-    * - wrappingKey        {CryptoKey}    default: "undefined"
-    * - key                {CryptoKey}    default: "undefined"
-    */
+   * Method that encrypts keys
+   * @param {CryptoKey} wrappingKey default: "undefined"
+   * @param {CryptoKey} key default: "undefined"
+   */
   encryptKey (wrappingKey, key) {
     const self = this
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(wrappingKey) !== '[object CryptoKey]') {
-        throw new TypeError('Expected input of wrappingKey to be a CryptoKey')
+        throw new TypeError('Expected input of wrappingKey to be a CryptoKey Object')
       }
 
       if (Object.prototype.toString.call(key) !== '[object CryptoKey]') {
-        throw new TypeError('Expected input of key to be a CryptoKey')
+        throw new TypeError('Expected input of key to be a CryptoKey Object')
       }
 
       let keyType = null
@@ -1432,7 +1488,7 @@ export default class OpenCrypto {
         } else if (wrappingKey.algorithm.name === 'AES-CBC') {
           ivAb = cryptoLib.getRandomValues(new Uint8Array(16))
         } else {
-          throw new TypeError('Unsupported wrappingKey AES cipher mode')
+          throw new TypeError('Cipher mode of the wrappingKey is not supported')
         }
 
         cryptoApi.wrapKey(
@@ -1452,7 +1508,7 @@ export default class OpenCrypto {
         })
       } else if (wrappingKey.algorithm.name === 'RSA-OAEP') {
         if (wrappingKey.type !== 'public') {
-          throw new TypeError('Expected input of wrappingKey using RSA-OAEP to be a CryptoKey of type public')
+          throw new TypeError('Expected input of wrappingKey to be a CryptoKey Object of type public')
         }
 
         cryptoApi.wrapKey(
@@ -1470,25 +1526,23 @@ export default class OpenCrypto {
           reject(err)
         })
       } else {
-        throw new TypeError('Unsupported wrappingKey')
+        throw new TypeError('Expected input of wrappingKey is not a supported wrappingKey')
       }
     })
   }
 
   /**
-    *
-    * Decrypts symmetric / shared key
-    * Supports AES-GCM, AES-CBC, RSA-OAEP
-    * - unwrappingKey           {CryptoKey}         default: "undefined"
-    * - encryptedKey            {base64 String}     default: "undefined"
-    * - options                 {Object}            default: (depends on algorithm)
-    * -- AES-GCM: { type: 'raw', name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-    * -- AES-CBC: { type: 'raw', name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-    * -- ECDH: { type: "'pkcs8' or 'spki'", name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
-    * -- ECDSA: { type: "'pkcs8' or 'spki'", name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
-    * -- RSA-OAEP: { type: "'pkcs8' or 'spki'", name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-    * -- RSA-PSS: { type: "'pkcs8' or 'spki'", name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign', 'verify'], isExtractable: true }
-    */
+   * Method that decrypts keys
+   * @param {CryptoKey} unwrappingKey default: "undefined"
+   * @param {String} encryptedKey default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- AES-GCM: { type: 'raw', name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- AES-CBC: { type: 'raw', name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- ECDH: { type: "'pkcs8' or 'spki'", name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+   * -- ECDSA: { type: "'pkcs8' or 'spki'", name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
+   * -- RSA-OAEP: { type: "'pkcs8' or 'spki'", name: 'RSA-OAEP', hash: 'SHA-512', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { type: "'pkcs8' or 'spki'", name: 'RSA-PSS', hash: 'SHA-512', usages: ['sign', 'verify'], isExtractable: true }
+   */
   decryptKey (unwrappingKey, encryptedKey, options) {
     const self = this
 
@@ -1501,7 +1555,7 @@ export default class OpenCrypto {
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(unwrappingKey) !== '[object CryptoKey]') {
-        throw new TypeError('Expected input of unwrappingKey to be a CryptoKey')
+        throw new TypeError('Expected input of unwrappingKey to be a CryptoKey Object')
       }
 
       if (typeof encryptedKey !== 'string') {
@@ -1610,7 +1664,7 @@ export default class OpenCrypto {
         keyOptions.hash = {}
         keyOptions.hash.name = options.hash
       } else {
-        throw new TypeError('Unsupported encryptedKey')
+        throw new TypeError('Expected input of options.name is not a valid algorithm name')
       }
 
       if (unwrappingKey.type === 'secret') {
@@ -1624,7 +1678,7 @@ export default class OpenCrypto {
           ivB64 = encryptedKey.substring(0, 24)
           encryptedKeyB64 = encryptedKey.substring(24)
         } else {
-          throw new TypeError('Unsupported unwrappingKey AES cipher mode')
+          throw new TypeError('Cipher mode of the wrappingKey is not supported')
         }
 
         const ivAb = self.base64ToArrayBuffer(ivB64)
@@ -1649,7 +1703,7 @@ export default class OpenCrypto {
         })
       } else if (unwrappingKey.algorithm.name === 'RSA-OAEP') {
         if (unwrappingKey.type !== 'private') {
-          throw new TypeError('Expected input of unwrappingKey to be a CryptoKey of type private')
+          throw new TypeError('Expected input of unwrappingKey to be a CryptoKey Object of type private')
         }
 
         const encryptedKeyAb = self.base64ToArrayBuffer(encryptedKey)
@@ -1673,22 +1727,25 @@ export default class OpenCrypto {
           reject(err)
         })
       } else {
-        throw new TypeError('Unsupported unwrappingKey')
+        throw new TypeError('Expected input of unwrappingKey is not a supported unwrappingKey')
       }
     })
   }
 
   /**
-    *
-    * Generates signature of data using ECDSA or RSA-PSS
-    * - privateKey     {CryptoKey}      default: "undefined"
-    * - dataAb         {ArrayBuffer}    default: "undefined"
-    * - options        {Object}         default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512' }
-    * -- RSA-PSS: { saltLength: 128 }
-    */
+   * Method that generates signature of data using ECDSA or RSA-PSS
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {ArrayBuffer} dataAb default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
+   */
   sign (privateKey, dataAb, options) {
     const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
@@ -1697,10 +1754,6 @@ export default class OpenCrypto {
 
       if (typeof dataAb !== 'object') {
         throw new TypeError('Expected input of dataAb to be an ArrayBuffer')
-      }
-
-      if (typeof options === 'undefined') {
-        options = {}
       }
 
       if (privateKey.algorithm.name === 'ECDSA') {
@@ -1717,9 +1770,9 @@ export default class OpenCrypto {
           },
           privateKey,
           dataAb
-        ).then(signature => {
-          const b64Signature = self.arrayBufferToBase64(signature)
-          resolve(b64Signature)
+        ).then(signatureAb => {
+          const signatureB64 = self.arrayBufferToBase64(signatureAb)
+          resolve(signatureB64)
         }).catch(err => {
           reject(err)
         })
@@ -1737,46 +1790,45 @@ export default class OpenCrypto {
           },
           privateKey,
           dataAb
-        ).then(signature => {
-          const b64Signature = self.arrayBufferToBase64(signature)
-          resolve(b64Signature)
+        ).then(signatureAb => {
+          const signatureB64 = self.arrayBufferToBase64(signatureAb)
+          resolve(signatureB64)
         }).catch(err => {
           reject(err)
         })
       } else {
-        throw new TypeError('Unsupported privateKey')
+        throw new TypeError('Expected input of privateKey is not a valid private key')
       }
     })
   }
 
   /**
-    *
-    * Verifies signature using ECDSA or RSA-PSS
-    * - publicKey      {CryptoKey}       default: "undefined"
-    * - dataAb         {ArrayBuffer}     default: "undefined"
-    * - signature      {base64}          default: "undefined"
-    * - options        {Object}          default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512' }
-    * -- RSA-PSS: { saltLength: 128 }
-    */
-  verify (publicKey, dataAb, signature, options) {
+   * Method that verifies data signature using ECDSA or RSA-PSS
+   * @param {CryptoKey} publicKey default: "undefined"
+   * @param {ArrayBuffer} data default: "undefined"
+   * @param {String} signature default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
+   */
+  verify (publicKey, data, signature, options) {
     const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
         throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
-      if (typeof dataAb !== 'object') {
-        throw new TypeError('Expected input of dataAb to be an ArrayBuffer')
+      if (typeof data !== 'object') {
+        throw new TypeError('Expected input of data to be an ArrayBuffer')
       }
 
       if (typeof signature !== 'string') {
         throw new TypeError('Expected input of signature to be a base64 String')
-      }
-
-      if (typeof options === 'undefined') {
-        options = {}
       }
       
       const signatureAb = self.base64ToArrayBuffer(signature)
@@ -1795,7 +1847,7 @@ export default class OpenCrypto {
           },
           publicKey,
           signatureAb,
-          dataAb
+          data
         ).then(isValid => {
           resolve(isValid)
         }).catch(err => {
@@ -1809,45 +1861,40 @@ export default class OpenCrypto {
           },
           publicKey,
           signatureAb,
-          dataAb
+          data
         ).then(isValid => {
           resolve(isValid)
         }).catch(err => {
           reject(err)
         })
       } else {
-        throw new TypeError('Unsupported publicKey')
+        throw new TypeError('Expected input of publicKey is not a valid public key')
       }
     })
   }
 
   /**
-    *
-    * Generates signature of CryptoKey using ECDSA or RSA-PSS
-    * - privateKey     {CryptoKey}      default: "undefined"
-    * - key            {CryptoKey}      default: "undefined"
-    * - options        {Object}         default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512' }
-    * -- RSA-PSS: { saltLength: 128 }
-    */
+   * Method that generates key signature using ECDSA or RSA-PSS
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {CryptoKey} key default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
+   */
    signKey (privateKey, key, options) {
     const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
         throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
       }
 
-      if (privateKey.algorithm.name !== 'ECDSA' && privateKey.algorithm.name !== 'RSA-PSS') {
-        throw new TypeError('Expected input of privateKey algorithm to be ECDSA or RSA-PSS')
-      }
-
       if (Object.prototype.toString.call(key) !== '[object CryptoKey]') {
         throw new TypeError('Expected input of key to be a CryptoKey Object')
-      }
-
-      if (typeof options === 'undefined') {
-        options = {}
       }
 
       cryptoApi.exportKey(
@@ -1868,13 +1915,13 @@ export default class OpenCrypto {
             },
             privateKey,
             keyAb
-          ).then(signature => {
-            const b64Signature = self.arrayBufferToBase64(signature)
-            resolve(b64Signature)
+          ).then(signatureAb => {
+            const signatureB64 = self.arrayBufferToBase64(signatureAb)
+            resolve(signatureB64)
           }).catch(err => {
             reject(err)
           })
-        } else {
+        } else if (privateKey.algorithm.name === 'RSA-PSS') {
           options.saltLength = (typeof options.saltLength !== 'undefined') ? options.saltLength : 128
   
           if (typeof options.saltLength !== 'number') {
@@ -1888,12 +1935,14 @@ export default class OpenCrypto {
             },
             privateKey,
             keyAb
-          ).then(signature => {
-            const b64Signature = self.arrayBufferToBase64(signature)
-            resolve(b64Signature)
+          ).then(signatureAb => {
+            const signatureB64 = self.arrayBufferToBase64(signatureAb)
+            resolve(signatureB64)
           }).catch(err => {
             reject(err)
           })
+        } else {
+          throw new TypeError('Expected input of privateKey is not a valid private key')
         }
       }).catch(err => {
         reject(err)
@@ -1902,25 +1951,24 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Verifies key signature using ECDSA or RSA-PSS
-    * - publicKey      {CryptoKey}       default: "undefined"
-    * - key            {CryptoKey}       default: "undefined"
-    * - signature      {base64}          default: "undefined"
-    * - options        {Object}          default: (depends on algorithm)
-    * -- ECDSA: { hash: 'SHA-512' }
-    * -- RSA-PSS: { saltLength: 128 }
-    */
+   * Method that verifies key signature using ECDSA or RSA-PSS
+   * @param {CryptoKey} publicKey default: "undefined"
+   * @param {CryptoKey} key default: "undefined"
+   * @param {String} signature default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
+   */
   verifyKey (publicKey, key, signature, options) {
     const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
         throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
-      }
-
-      if (publicKey.algorithm.name !== 'ECDSA' && publicKey.algorithm.name !== 'RSA-PSS') {
-        throw new TypeError('Expected input of publicKey algorithm to be ECDSA or RSA-PSS')
       }
 
       if (Object.prototype.toString.call(key) !== '[object CryptoKey]') {
@@ -1929,10 +1977,6 @@ export default class OpenCrypto {
 
       if (typeof signature !== 'string') {
         throw new TypeError('Expected input of signature to be a base64 String')
-      }
-
-      if (typeof options === 'undefined') {
-        options = {}
       }
       
       const signatureAb = self.base64ToArrayBuffer(signature)
@@ -1961,7 +2005,7 @@ export default class OpenCrypto {
           }).catch(err => {
             reject(err)
           })
-        } else {
+        } else if (publicKey.algorithm.name === 'RSA-PSS') {
           cryptoApi.verify(
             {
               name: 'RSA-PSS',
@@ -1975,6 +2019,8 @@ export default class OpenCrypto {
           }).catch(err => {
             reject(err)
           })
+        } else {
+          throw new TypeError('Expected input of publicKey is not a valid public key')
         }
       }).catch(err => {
         reject(err)
@@ -1983,30 +2029,28 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Generates symmetric / shared key for AES encryption
-    * Uses Galois/Counter Mode (GCM) for operation by default.
-    * - keyLength         {Integer}      default: "256" accepts 128 and 256
-    * - options           {Object}       default: "{ keyCipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
-    */
-  getSharedKey (keyLength, options) {
-    keyLength = (typeof keyLength !== 'undefined') ? keyLength : 256
+   * Method that generates symmetric/shared key for AES encryption
+   * @param {Integer} length default: "256"
+   * @param {Object} options default: "{ cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+   */
+  getSharedKey (length, options) {
+    length = (typeof length !== 'undefined') ? length : 256
 
     if (typeof options === 'undefined') {
       options = {}
     }
 
-    options.keyCipher = (typeof options.keyCipher !== 'undefined') ? options.keyCipher : 'AES-GCM'
+    options.cipher = (typeof options.cipher !== 'undefined') ? options.cipher : 'AES-GCM'
     options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
     options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
 
     return new Promise((resolve, reject) => {
-      if (typeof keyLength !== 'number') {
-        throw new TypeError('Expected input of keyLength to be a Number')
+      if (typeof length !== 'number') {
+        throw new TypeError('Expected input of length to be a Number')
       }
 
-      if (typeof options.keyCipher !== 'string') {
-        throw new TypeError('Expected input of options.keyCipher expected to be a String')
+      if (typeof options.cipher !== 'string') {
+        throw new TypeError('Expected input of options.cipher expected to be a String')
       }
 
       if (typeof options.usages !== 'object') {
@@ -2019,13 +2063,13 @@ export default class OpenCrypto {
 
       cryptoApi.generateKey(
         {
-          name: options.keyCipher,
-          length: keyLength
+          name: options.cipher,
+          length: length
         },
         options.isExtractable,
         options.usages
-      ).then(sessionKey => {
-        resolve(sessionKey)
+      ).then(sharedKey => {
+        resolve(sharedKey)
       }).catch(err => {
         reject(err)
       })
@@ -2033,13 +2077,10 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Encrypts data using symmetric / shared key, converts them to
-    * base64 format and prepends IV in front of the encrypted data.
-    * Uses Galois/Counter Mode (GCM) for operation.
-    * - sharedKey      {CryptoKey}      default: "undefined" symmetric / shared key
-    * - data           {ArrayBuffer}    default: "undefined" any data to be encrypted
-    */
+   * Method that encrypts data using symmetric/shared key
+   * @param {CryptoKey} sharedKey default: "undefined"
+   * @param {ArrayBuffer} data default: "undefined"
+   */
   encrypt (sharedKey, data) {
     const self = this
 
@@ -2052,19 +2093,28 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of data to be an ArrayBuffer')
       }
 
-      const ivAb = cryptoLib.getRandomValues(new Uint8Array(12))
+      let ivAb = null
+
+      if (sharedKey.algorithm.name === 'AES-GCM') {
+        ivAb = cryptoLib.getRandomValues(new Uint8Array(12))
+      } else if (sharedKey.algorithm.name === 'AES-CBC') {
+        ivAb = cryptoLib.getRandomValues(new Uint8Array(16))
+      } else {
+        throw new TypeError('Cipher mode of the sharedKey is not supported')
+      }
 
       cryptoApi.encrypt(
         {
-          name: 'AES-GCM',
+          name: sharedKey.algorithm.name,
           iv: ivAb,
           tagLength: 128
         },
         sharedKey,
         data
-      ).then(encrypted => {
+      ).then(encryptedAb => {
         const ivB64 = self.arrayBufferToBase64(ivAb)
-        const encryptedB64 = self.arrayBufferToBase64(encrypted)
+        const encryptedB64 = self.arrayBufferToBase64(encryptedAb)
+
         resolve(ivB64 + encryptedB64)
       }).catch(err => {
         reject(err)
@@ -2073,15 +2123,21 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Decrypts data using symmetric / shared key, extracts IV from
-    * the front of the encrypted data and converts decrypted data
-    * to base64. Uses Galois/Counter Mode (GCM) for operation.
-    * - sharedKey           {CryptoKey}      default: "undefined" symmetric / shared key
-    * - encryptedData       {base64}         default: "undefined" any data to be decrypted
-    */
-  decrypt (sharedKey, encryptedData) {
+   * Method that decrypts data using symmetric/shared key
+   * @param {CryptoKey} sharedKey default: "undefined"
+   * @param {String} encryptedData default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- AES-GCM: { cipher: 'AES-GCM' }
+   * -- AES-CBC: { cipher: 'AES-CBC' }
+   */
+  decrypt (sharedKey, encryptedData, options) {
     const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.cipher = (typeof options.cipher !== 'undefined') ? options.cipher : 'AES-GCM'
 
     return new Promise((resolve, reject) => {
       if (Object.prototype.toString.call(sharedKey) !== '[object CryptoKey]' && sharedKey.type !== 'secret') {
@@ -2092,21 +2148,36 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of encryptedData to be a String')
       }
 
-      const ivB64 = encryptedData.substring(0, 16)
-      const encryptedB64 = encryptedData.substring(16)
+      if (typeof options.cipher !== 'string') {
+        throw new TypeError('Expected input of options.cipher to be a String')
+      }
+
+      let ivB64 = null
+      let encryptedB64 = null
+
+      if (options.cipher === 'AES-GCM') {
+        ivB64 = encryptedData.substring(0, 16)
+        encryptedB64 = encryptedData.substring(16)
+      } else if (options.cipher === 'AES-CBC') {
+        ivB64 = encryptedData.substring(0, 24)
+        encryptedB64 = encryptedData.substring(24)
+      } else {
+        throw new TypeError('Cipher mode of the sharedKey is not supported')
+      }
+
       const ivAb = self.base64ToArrayBuffer(ivB64)
       const encryptedAb = self.base64ToArrayBuffer(encryptedB64)
 
       cryptoApi.decrypt(
         {
-          name: 'AES-GCM',
+          name: options.cipher,
           iv: ivAb,
           tagLength: 128
         },
         sharedKey,
         encryptedAb
-      ).then(decrypted => {
-        resolve(decrypted)
+      ).then(decryptedDataAb => {
+        resolve(decryptedDataAb)
       }).catch(err => {
         reject(err)
       })
@@ -2114,18 +2185,12 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Derives symmetric key from passphrase
-    * - passphrase        {String}        default: "undefined" passphrase string
-    * - salt              {ArrayBuffer}   default: "undefined" salt
-    * - iterations        {Number}        default: "64000" number of iterations
-    * - options           {Object}        default: (depends on algorithm)
-    * -- hash             {String}        default: "SHA-512" hash algorithm
-    * -- length           {Number}        default: "256" key length
-    * -- cipher           {String}        default: "AES-GCM" key cipher
-    * -- usages        {Array}         default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" key usages
-    * -- isExtractable    {Boolean}       default: "true" whether key is extractable
-    */
+   * Method that derives shared key from passphrase
+   * @param {String} passphrase default: "undefined"
+   * @param {ArrayBuffer} salt default: "undefined"
+   * @param {Number} iterations default: "64000"
+   * @param {Object} options default: "{ hash: 'SHA-512', length: 256, cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+   */
   derivePassphraseKey (passphrase, salt, iterations, options) {
     const self = this
 
@@ -2174,9 +2239,11 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of options.isExtractable to be a Boolean')
       }
 
+      const passphraseAb = self.stringToArrayBuffer(passphrase)
+
       cryptoApi.importKey(
         'raw',
-        self.stringToArrayBuffer(passphrase),
+        passphraseAb,
         {
           name: 'PBKDF2'
         },
@@ -2209,18 +2276,12 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Derives hash from passphrase
-    * - passphrase        {String}        default: "undefined" passphrase string
-    * - salt              {ArrayBuffer}   default: "undefined" salt
-    * - iterations        {Number}        default: "64000"     number of iterations
-    * - options           {Object}        default: (depends on algorithm)
-    * -- hash             {String}        default: "SHA-512" hash algorithm
-    * -- length           {Number}        default: "256" key length
-    * -- cipher           {String}        default: "AES-GCM" key cipher
-    * -- usages           {Array}         default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']" key usages
-    * -- isExtractable    {Boolean}       default: "true" whether key is extractable
-    */
+   * Method that derives hash from passphrase
+   * @param {String} passphrase default: "undefined"
+   * @param {ArrayBuffer} salt default: "undefined" salt
+   * @param {Number} iterations default: "64000"
+   * @param {Object} options default: "{ hash: 'SHA-512', length: 256, cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+   */
   hashPassphrase (passphrase, salt, iterations, options) {
     const self = this
 
@@ -2273,8 +2334,8 @@ export default class OpenCrypto {
         cryptoApi.exportKey(
           'raw',
           derivedKey
-        ).then(exportedKey => {
-          const derivedHash = self.arrayBufferToHexString(exportedKey)
+        ).then(exportedKeyAb => {
+          const derivedHash = self.arrayBufferToHexString(exportedKeyAb)
           resolve(derivedHash)
         }).catch(err => {
           reject(err)
@@ -2286,11 +2347,10 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Method for getting fingerprint of ECC, RSA or AES keys
-    * - key         {CryptoKey}     default: "undefined"
-    * - options     {Object}        default: { hash: 'SHA-512', isBuffer: false }
-    */
+   * Method that generates fingerprint of EC, RSA and AES keys
+   * @param {CryptoKey} key default: "undefined"
+   * @param {Object} options default: { hash: 'SHA-512', isBuffer: false }
+   */
   getFingerprint (key, options) {
     const self = this
 
@@ -2315,14 +2375,15 @@ export default class OpenCrypto {
       }
 
       let keyType = null
-      if (key.type === 'public') {
-        keyType = 'spki'
-      } else if (key.type === 'private') {
-        keyType = 'pkcs8'
-      } else if (key.type === 'secret') {
-        keyType = 'raw'
-      } else {
-        throw new TypeError('Expected input of key is not a valid CryptoKey')
+      switch (key.type) {
+        case 'secret' :
+          keyType = 'raw'
+          break
+        case 'private' :
+          keyType = 'pkcs8'
+          break
+        case 'public' :
+          keyType = 'spki'
       }
 
       cryptoApi.exportKey(
@@ -2334,11 +2395,11 @@ export default class OpenCrypto {
             name: options.hash
           },
           keyAb
-        ).then(fingerprint => {
+        ).then(fingerprintAb => {
           if (options.isBuffer) {
-            resolve(fingerprint)
+            resolve(fingerprintAb)
           } else {
-            const hexFingerprint = self.arrayBufferToHexString(fingerprint)
+            const hexFingerprint = self.arrayBufferToHexString(fingerprintAb)
             resolve(hexFingerprint)
           }
         }).catch(err => {
@@ -2351,13 +2412,10 @@ export default class OpenCrypto {
   }
 
   /**
-    *
-    * Method for getting random bytes using cryptographically secure PRNG
-    * - size    {number}    default: "16" bytes
-    */
+   * Method that generates random bytes using cryptographically secure PRNG
+   * @param {Number} size default: "16"
+   */
   getRandomBytes (size) {
-    const self = this
-
     size = (typeof size !== 'undefined') ? size : 16
 
     return new Promise((resolve, reject) => {
