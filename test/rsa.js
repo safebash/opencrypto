@@ -83,14 +83,14 @@ describe('RSA', function () {
 
   describe('encrypt and decrypt private key', function () {
     it('should return encrypted private key PKCS8', function (done) {
-      crypto.encryptPrivateKey(_rsaKeyPair.privateKey, 'securepassphrase').then(function (encryptedPrivateKey) {
+      crypto.encryptPrivateKey(_rsaKeyPair.privateKey, 'passphrase').then(function (encryptedPrivateKey) {
         _rsaEncryptedPrivateKey = encryptedPrivateKey
         done()
       })
     })
 
     it('should return decrypted private key PKCS8', function (done) {
-      crypto.decryptPrivateKey(_rsaEncryptedPrivateKey, 'securepassphrase', { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, keyUsages: ['decrypt', 'unwrapKey'], isExtractable: true }).then(function (decryptedPrivateKey) {
+      crypto.decryptPrivateKey(_rsaEncryptedPrivateKey, 'passphrase', { name: 'RSA-OAEP', hash: 'SHA-512', usages: ['decrypt', 'unwrapKey'], isExtractable: true }).then(function (decryptedPrivateKey) {
         done()
       })
     })

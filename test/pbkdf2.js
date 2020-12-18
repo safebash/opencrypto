@@ -3,7 +3,7 @@
 describe('password hashing', function () {
   it('should return hashed passphrase', function (done) {
     crypto.getRandomBytes(16).then(function (salt) {
-      crypto.hashPassphrase('randompassphrase', salt, 1000, 'SHA-512', 256).then(function (hashedPassphrase) {
+      crypto.hashPassphrase('passphrase', salt, 1000).then(function (derivedHash) {
         done()
       })
     })
