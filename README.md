@@ -7,304 +7,324 @@
 
 OpenCrypto is a lightweight, high performance, standard-compliant JavaScript library built on top of [Web Cryptography API](https://www.w3.org/TR/WebCryptoAPI/). This library makes it easier to implement cryptography in a browser with less code. It can convert and encode ASN.1, PEM and CryptoKey. OpenCrypto is created and maintained by [SafeBash](https://safebash.com).
 
-## Instructions
-### Load OpenCrypto into your web application
+## Import into your web application
 ```javascript
 <script type="text/javascript" src="OpenCrypto.min.js"></script>
+
+// Initialize new OpenCrypto instance
+const crypt = new OpenCrypto()
 ```
 or
 ```javascript
 import OpenCrypto from 'opencrypto'
-```
-### Examples
-```javascript
+
 // Initialize new OpenCrypto instance
 const crypt = new OpenCrypto()
+```
 
-// Conversion of CryptoKey and PEM
-// Convert CryptoKey of type private to PEM
-/*
- * privateKey: CryptoKey | default: undefined
+## Conversion of CryptoKey, PEM and Base64
+```javascript
+/**
+ * Method that converts asymmetric private key from CryptoKey to PEM format
+ * @param {CryptoKey} privateKey default: "undefined"
  */
-crypt.cryptoPrivateToPem(privateKey).then(function (privatePem) {
+crypt.cryptoPrivateToPem(privateKey).then(privatePem => {
   console.log(privatePem)
 })
 
-// Convert PEM private key to CryptoKey
-/*
- * pem: PEM Private Key (String) | default: undefined
- * options:
- *   for ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
- *   for ECDSA: { name: 'ECDSA', usages: ['sign'], isExtractable: true }
- *   for RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
- *   for RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
+/**
+ * Method that converts asymmetric private key from PEM to CryptoKey format
+ * @param {String} pem default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+ * -- ECDSA: { name: 'ECDSA', usages: ['sign'], isExtractable: true }
+ * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['decrypt', 'unwrapKey'], isExtractable: true }
+ * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign'], isExtractable: true }
  */
-crypt.pemPrivateToCrypto(pem, options).then(function (cryptoPrivate) {
+crypt.pemPrivateToCrypto(pem, options).then(cryptoPrivate => {
   console.log(cryptoPrivate)
 })
 
-// Convert CryptoKey of type public to PEM
-/*
- * publicKey: CryptoKey | default: undefined
+/**
+ * Method that converts asymmetric public key from CryptoKey to PEM format
+ * @param {CryptoKey} publicKey default: "undefined"
  */
-crypt.cryptoPublicToPem(publicKey).then(function (publicPem) {
+crypt.cryptoPublicToPem(publicKey).then(publicPem => {
   console.log(publicPem)
 })
 
-// Convert PEM public key to CryptoKey
-/*
- * pem: PEM Public Key (String) | default: undefined
- * options:
- *   for ECDH: { name: 'ECDH', usages: [], isExtractable: true }
- *   for ECDSA: { name: 'ECDSA', usages: ['verify'], isExtractable: true }
- *   for RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'wrapKey'], isExtractable: true }
- *   for RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['verify'], isExtractable: true }
+/**
+ * Method that converts asymmetric public key from PEM to CryptoKey format
+ * @param {String} publicKey default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDH: { name: 'ECDH', usages: [], isExtractable: true }
+ * -- ECDSA: { name: 'ECDSA', usages: ['verify'], isExtractable: true }
+ * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'wrapKey'], isExtractable: true }
+ * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['verify'], isExtractable: true }
  */
-crypt.pemPublicToCrypto(pem, options).then(function (cryptoPublic) {
+crypt.pemPublicToCrypto(pem, options).then(cryptoPublic => {
   console.log(cryptoPublic)
 })
 
-// Data encoding and decoding
-// Encode ArrayBuffer to Hexadecimal String
-/*
- * ab: ArrayBuffer | default: undefined
+/**
+ * Method that converts CryptoKey to base64
+ * @param {CryptoKey} key default: "undefined"
+ * @param {String} type default: "secret: 'raw'; private: 'pkcs8'; public: 'spki'"
  */
-const hexString = crypt.arrayBufferToHexString(ab)
+crypt.cryptoToBase64(key, type).then(base64Key => {
+  console.log(base64Key)
+})
 
-// Decode Hexadecimal String to ArrayBuffer
-/*
- * hexString: Hexadecimal encoded String | default: undefined
+/**
+ * Method that converts base64 encoded key to CryptoKey
+ * @param {String} key default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- AES-GCM: { name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- AES-CBC: { name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+ * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
+ * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign', 'verify'], isExtractable: true }
  */
-const ab = crypt.hexStringToArrayBuffer(hexString)
+crypt.base64ToCrypto(key, options).then(cryptoKey => {
+  console.log(cryptoKey)
+})
+```
 
-// Encode ArrayBuffer to Base64
-/*
- * ab: ArrayBuffer | default: undefined
+## Asymmetric Encryption
+```javascript
+/**
+ * Method that generates asymmetric RSA-OAEP key pair
+ * @param {Integer} modulusLength default: "2048"
+ * @param {String} hash default: "SHA-512"
+ * @param {String} paddingScheme default: "RSA-OAEP"
+ * @param {Array} usages default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']"
+ * @param {Boolean} isExtractable default: "true"
  */
-const base64 = crypt.arrayBufferToBase64(ab)
-
-// Decode Base64 to ArrayBuffer
-/*
- * base64: Base64 encoded String | default: undefined
- */
-const ab = crypt.base64ToArrayBuffer(base64)
-
-// Encode ArrayBuffer to String
-/*
- * ab: ArrayBuffer | default: undefined
- */
-const str = crypt.arrayBufferToString(ab)
-
-// Decode String to ArrayBuffer
-/*
- * str: String | default: undefined
- */
-const ab = crypt.stringToArrayBuffer(str)
-
-// Asymmetric Encryption (RSA)
-// Generate RSA key pair
-/*
- * modulusLength: 1024 or 2048 or 4096 | default: 2048
- * hash: 'SHA1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
- * paddingScheme: 'RSA-OAEP' or 'RSA-PSS' | default: 'RSA-OAEP'
- * usages:
- *   for RSA-OAEP = ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
- *   for RSA-PSS = ['sign', 'verify']
- *   default: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
- * isExtractable: true or false | default: true
- */
-crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, isExtractable).then(function (keyPair) {
+crypt.getRSAKeyPair(modulusLength, hash, paddingScheme, usages, isExtractable).then(keyPair => {
   console.log(keyPair.publicKey)
   console.log(keyPair.privateKey)
 })
 
-// Encrypt data using public key
-/*
- * publicKey: CryptoKey | default: undefined
- * data: ArrayBuffer | default: undefined
+/**
+ * Method that encrypts data using asymmetric encryption
+ * @param {CryptoKey} publicKey default: "undefined"
+ * @param {ArrayBuffer} data default: "undefined"
  */
-crypt.rsaEncrypt(publicKey, data).then(function (encryptedDataAsymmetric) {
-  console.log(encryptedDataAsymmetric)
-})
-
-// Decrypt data using private key
-/*
- * privateKey: CryptoKey | default: undefined
- * encryptedData: base64 String | default: undefined
- */
-crypt.rsaDecrypt(privateKey, encryptedData).then(function (decryptedDataAsymmetric) {
-  console.log(decryptedDataAsymmetric)
-})
-
-// Generate EC key pair
-/*
- * curve: P-256 or P-384 or P-521 | default: P-256
- * type: 'ECDH' or 'ECDSA' | default: 'ECDH'
- * usages: default: ['deriveKey', 'deriveBits']
- * isExtractable: true or false | default: true
- */
-crypt.getECKeyPair(curve, type, usages, isExtractable).then(function (keyPair) {
-  console.log(keyPair.privateKey)
-  console.log(keyPair.publicKey)
-})
-
-// Encrypt CryptoKey of type private into PEM Encrypted Private Key
-/*
- * privateKey: CryptoKey | default: undefined
- * passphrase: String | default: undefined
- * iterations: Integer | default: 64000
- * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
- * cipher: 'AES-CBC' or 'AES-GCM' or 'AES-CFB' | default: 'AES-CBC'
- * keyLength: default: 256
- */
-crypt.encryptPrivateKey(privateKey, passphrase, iterations, hash, cipher, keyLength).then(function (encryptedPrivateKey) {
-  // This PEM Encrypted Private Key is fully compatiable with OpenSSL
-  console.log(encryptedPrivateKey)
-})
-
-// Decrypt PEM Encrypted Private Key
-/*
- * encryptedPrivateKey: PEM PKCS #8 | default: undefined
- * passphrase: String | default: undefined
- * options:
- *   for ECDH: { name: 'ECDH', namedCurve: 'P-256', keyUsages: ['deriveKey', 'deriveBits'], isExtractable: true }
- *   for ECDSA: { name: 'ECDSA', namedCurve: 'P-256', keyUsages: ['sign'], isExtractable: true }
- *   for RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, keyUsages: ['decrypt', 'unwrapKey'], isExtractable: true }
- *   for RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, keyUsages: ['sign'], isExtractable: true }
- *   default: { name: 'ECDH', namedCurve: 'P-256', keyUsages: ['deriveKey', 'deriveBits'], isExtractable: true }
- */
-crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(function (decryptedPrivateKey) {
-  console.log(decryptedPrivateKey)
-})
-
-// ECDH Key Agreement
-/*
- * privateKey CryptoKey | default: undefined
- * publicKey CryptoKey | default: undefined
- * options: { bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
- */
-crypt.keyAgreement(privateKey, publicKey).then(function (symmetricKey) {
-  console.log(symmetricKey)
-})
-
-// Encrypt shared key
-/*
- * Supports AES and RSA-OAEP
- * wrappingKey: CryptoKey | default: undefined
- * sharedKey: CryptoKey | default: undefined
- */
-crypt.encryptKey(wrappingKey, sharedKey).then(function (encryptedSharedKey) {
-  console.log(encryptedSharedKey)
-})
-
-// Decrypt shared key
-/*
- * Supports AES and RSA-OAEP
- * unwrappingKey: CryptoKey | default: undefined
- * encryptedSharedKey: CryptoKey | default: undefined
- * options:
- *   for AES-GCM: { keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
- *   for RSA-OAEP: { keyCipher: 'AES-GCM', keyLength: 256, keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
- */
-crypt.decryptKey(privateKey, encryptedSharedKey, options).then(function (decryptedSharedKey) {
-  console.log(decryptedSharedKey)
-})
-
-// Sign data
-/*
- * privateKey: CryptoKey | default: undefined
- * data: ArrayBuffer | default: undefined
- * options:
- *   for ECDSA: { hash: 'SHA-512' }
- *   for RSA-PSS: { saltLength: 128 }
- */
-crypt.sign(privateKey, data, options).then(function (signature) {
-  console.log(signature)
-})
-
-// Verify signature
-/*
- * publicKey: CryptoKey | default: undefined
- * data: ArrayBuffer | default: undefined
- * signature: base64 String | default: undefined
- * options:
- *   for ECDSA: { hash: 'SHA-512' }
- *   for RSA-PSS: { saltLength: 128 }
- */
-crypt.verify(publicKey, data, signature, options).then(function (isValid) {
-  console.log(isValid)
-})
-
-// Symmetric Encryption (AES)
-// Generate new symmetric key
-/*
- * keyLength: 128, 192 or 256 | default: 256
- * options: { keyCipher: 'AES-GCM', keyUsages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
- */
-crypt.getSharedKey(keyLength, options).then(function (sharedKey) {
-  console.log(sharedKey)
-})
-
-// Encrypt data using shared key
-/*
- * sharedKey: CryptoKey | default: undefined
- * data: ArrayBuffer | default: undefined
- */
-crypt.encrypt(sharedKey, data).then(function (encryptedData) {
+crypt.rsaEncrypt(publicKey, data).then(encryptedData => {
   console.log(encryptedData)
 })
 
-// Decrypt data using shared key
-/*
- * sharedKey: CryptoKey | default: undefined
- * encryptedData: base64 String | default: undefined
+/**
+ * Method that decrypts data using asymmetric encryption
+ * @param {CryptoKey} privateKey default: "undefined"
+ * @param {String} encryptedData default: "undefined"
  */
-crypt.decrypt(sharedKey, encryptedData).then(function (decryptedData) {
+crypt.rsaDecrypt(privateKey, encryptedData).then(decryptedData => {
   console.log(decryptedData)
 })
 
-// Other Crypto Features
-// Derive hash from passphrase
-/*
- * passphrase: String | default: undefined
- * salt: ArrayBuffer | default: undefined
- * iterations: Integer | default: 64000
- * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
- * length: default: 256
+/**
+ * Method that generates asymmetric Elliptic Curve Diffie-Hellman key pair
+ * @param {String} curve default: "P-256"
+ * @param {String} type default: "ECDH"
+ * @param {Array} usages default: "['deriveKey', 'deriveBits']"
+ * @param {Boolean} isExtractable default: "true"
  */
-crypt.hashPassphrase(passphrase, salt, iterations, hash, length).then(function (hashedPassphrase) {
-  console.log(hashedPassphrase)
+crypt.getECKeyPair(curve, type, usages, isExtractable).then(keyPair => {
+  console.log(keyPair.privateKey)
+  console.log(keyPair.publicKey)
 })
 
-// Derive key from passphrase
-/*
- * passphrase: String | default: undefined
- * salt: ArrayBuffer | default: undefined
- * iterations: Integer | default: 64000
- * hash: 'SHA-1' or 'SHA-256' or 'SHA-384' or 'SHA-512' | default: 'SHA-512'
- * length: default: 256
+/**
+ * Method that encrypts asymmetric private key using passphrase to enable storage in unsecure environment
+ * @param {CryptoKey} privateKey default: "undefined"
+ * @param {String} passphrase default: "undefined"
+ * @param {Number} iterations default: "64000"
+ * @param {String} hash default: "SHA-512"
+ * @param {String} cipher default: "AES-GCM"
+ * @param {Number} length default: "256"
  */
-crypt.derivePassphraseKey(passphrase, salt, iterations, hash, length).then(function (derivedKey) {
+crypt.encryptPrivateKey(privateKey, passphrase, iterations, hash, cipher, length).then(encryptedPrivateKey => {
+  console.log(encryptedPrivateKey)
+})
+
+/**
+ * Method that decrypts asymmetric private key using passphrase
+ * @param {String} encryptedPrivateKey default: "undefined"
+ * @param {String} passphrase default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDH: { name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+ * -- ECDSA: { name: 'ECDSA', namedCurve: 'P-256', usages: ['sign'], isExtractable: true }
+ * -- RSA-OAEP: { name: 'RSA-OAEP', hash: 'SHA-512', usages: ['decrypt', 'unwrapKey'], isExtractable: true }
+ * -- RSA-PSS: { name: 'RSA-PSS', hash: 'SHA-512', usages: ['sign'], isExtractable: true }
+ */
+crypt.decryptPrivateKey(encryptedPrivateKey, passphrase, options).then(decryptedPrivateKey => {
+  console.log(decryptedPrivateKey)
+})
+
+/**
+ * Method that performs ECDH key agreement
+ * @param {CryptoKey} privateKey default: "undefined"
+ * @param {CryptoKey} publicKey default: "undefined"
+ * @param {Object} options default: "{ bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", cipher: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+ */
+crypt.keyAgreement(privateKey, publicKey, options).then(sharedKey => {
+  console.log(sharedKey)
+})
+```
+
+## Symmetric Encryption
+```javascript
+/**
+ * Method that generates symmetric/shared key for AES encryption
+ * @param {Integer} length default: "256"
+ * @param {Object} options default: "{ cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+ */
+crypt.getSharedKey(length, options).then(sharedKey => {
+  console.log(sharedKey)
+})
+
+/**
+ * Method that encrypts keys
+ * @param {CryptoKey} wrappingKey default: "undefined"
+ * @param {CryptoKey} key default: "undefined"
+ */
+crypt.encryptKey(wrappingKey, key).then(encryptedKey => {
+  console.log(encryptedKey)
+})
+
+/**
+ * Method that decrypts keys
+ * @param {CryptoKey} unwrappingKey default: "undefined"
+ * @param {String} encryptedKey default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- AES-GCM: { type: 'raw', name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- AES-CBC: { type: 'raw', name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- ECDH: { type: "'pkcs8' or 'spki'", name: 'ECDH', namedCurve: 'P-256', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+ * -- ECDSA: { type: "'pkcs8' or 'spki'", name: 'ECDSA', namedCurve: 'P-256', usages: ['sign', 'verify'], isExtractable: true }
+ * -- RSA-OAEP: { type: "'pkcs8' or 'spki'", name: 'RSA-OAEP', hash: 'SHA-512', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+ * -- RSA-PSS: { type: "'pkcs8' or 'spki'", name: 'RSA-PSS', hash: 'SHA-512', usages: ['sign', 'verify'], isExtractable: true }
+ */
+crypt.decryptKey(unwrappingKey, encryptedKey, options).then(decryptedKey => {
+  console.log(decryptedKey)
+})
+
+/**
+ * Method that generates key signature using ECDSA or RSA-PSS
+ * @param {CryptoKey} privateKey default: "undefined"
+ * @param {CryptoKey} key default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDSA: { hash: 'SHA-512' }
+ * -- RSA-PSS: { saltLength: 128 }
+ */
+crypt.signKey(privateKey, key, options).then(keySignature => {
+  console.log(keySignature)
+})
+
+/**
+ * Method that verifies key signature using ECDSA or RSA-PSS
+ * @param {CryptoKey} publicKey default: "undefined"
+ * @param {CryptoKey} key default: "undefined"
+ * @param {String} signature default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDSA: { hash: 'SHA-512' }
+ * -- RSA-PSS: { saltLength: 128 }
+ */
+crypt.verifyKey(publicKey, key, signature, options).then(isValid => {
+  console.log(isValid)
+})
+
+/**
+ * Method that generates signature of data using ECDSA or RSA-PSS
+ * @param {CryptoKey} privateKey default: "undefined"
+ * @param {ArrayBuffer} data default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDSA: { hash: 'SHA-512' }
+ * -- RSA-PSS: { saltLength: 128 }
+ */
+crypt.sign(privateKey, data, options).then(signature => {
+  console.log(signature)
+})
+
+/**
+ * Method that verifies data signature using ECDSA or RSA-PSS
+ * @param {CryptoKey} publicKey default: "undefined"
+ * @param {ArrayBuffer} data default: "undefined"
+ * @param {String} signature default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- ECDSA: { hash: 'SHA-512' }
+ * -- RSA-PSS: { saltLength: 128 }
+ */
+crypt.verify(publicKey, data, signature, options).then(isValid => {
+  console.log(isValid)
+})
+
+/**
+ * Method that encrypts data using symmetric/shared key
+ * @param {CryptoKey} sharedKey default: "undefined"
+ * @param {ArrayBuffer} data default: "undefined"
+ */
+crypt.encrypt(sharedKey, data).then(encryptedData => {
+  console.log(encryptedData)
+})
+
+/**
+ * Method that decrypts data using symmetric/shared key
+ * @param {CryptoKey} sharedKey default: "undefined"
+ * @param {String} encryptedData default: "undefined"
+ * @param {Object} options default: depends on algorithm below
+ * -- AES-GCM: { cipher: 'AES-GCM' }
+ * -- AES-CBC: { cipher: 'AES-CBC' }
+ */
+crypt.decrypt(sharedKey, encryptedData, options).then(decryptedData => {
+  console.log(decryptedData)
+})
+```
+
+## Passphrase derivation
+```javascript
+/**
+ * Method that derives shared key from passphrase
+ * @param {String} passphrase default: "undefined"
+ * @param {ArrayBuffer} salt default: "undefined"
+ * @param {Number} iterations default: "64000"
+ * @param {Object} options default: "{ hash: 'SHA-512', length: 256, cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+ */
+crypt.derivePassphraseKey(passphrase, salt, iterations, options).then(derivedKey => {
   console.log(derivedKey)
 })
 
-// Get key fingerprint
-/*
- * key: CryptoKey | default: undefined
- * options: Object | default: { hash: 'SHA-512', isBuffer: false }
+/**
+ * Method that derives hash from passphrase
+ * @param {String} passphrase default: "undefined"
+ * @param {ArrayBuffer} salt default: "undefined" salt
+ * @param {Number} iterations default: "64000"
+ * @param {Object} options default: "{ hash: 'SHA-512', length: 256, cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
  */
-crypt.getFingerprint(key, options).then(function (fingerprint) {
+crypt.hashPassphrase(passphrase, salt, iterations, options).then(hashedPassphrase => {
+  console.log(derivedHash)
+})
+
+/**
+ * Method that generates fingerprint of EC, RSA and AES keys
+ * @param {CryptoKey} key default: "undefined"
+ * @param {Object} options default: { hash: 'SHA-512', isBuffer: false }
+ */
+crypt.getFingerprint(key, options).then(fingerprint => {
   console.log(fingerprint)
 })
+```
 
-// Generate random data
-/*
- * size: Integer | default: 16
+## Other
+```javascript
+/**
+ * Method that generates random bytes using cryptographically secure PRNG
+ * @param {Number} size default: "16"
  */
-crypt.getRandomBytes(size).then(function (data) {
+crypt.getRandomBytes(size).then(data => {
   console.log(data)
 })
-
 ```
 
 ## Standards Compliance

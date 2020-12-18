@@ -214,7 +214,7 @@ export default class OpenCrypto {
    */
   base64ToArrayBuffer (b64) {
     if (typeof b64 !== 'string') {
-      throw new TypeError('Expected input of b64 to be a base64 String')
+      throw new TypeError('Expected input of b64 to be a Base64 String')
     }
 
     return this.decodeAb(b64)
@@ -780,7 +780,7 @@ export default class OpenCrypto {
 
   /**
    * Method that converts base64 encoded key to CryptoKey
-   * @param {CryptoKey} b64Key default: "undefined"
+   * @param {String} key default: "undefined"
    * @param {Object} options default: depends on algorithm below
    * -- AES-GCM: { name: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    * -- AES-CBC: { name: 'AES-CBC', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
@@ -789,7 +789,7 @@ export default class OpenCrypto {
    * -- RSA-OAEP: { name: 'RSA-OAEP', hash: { name: 'SHA-512' }, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
    * -- RSA-PSS: { name: 'RSA-PSS', hash: { name: 'SHA-512' }, usages: ['sign', 'verify'], isExtractable: true }
    */
-  base64ToCrypto (b64Key, options) {
+  base64ToCrypto (key, options) {
     const self = this
 
     if (typeof options === 'undefined') {
@@ -800,8 +800,8 @@ export default class OpenCrypto {
     options.isExtractable = (typeof options.isExtractable !== 'undefined' ) ? options.isExtractable : true
 
     return new Promise((resolve, reject) => {
-      if (typeof b64Key !== 'string') {
-        throw new TypeError('Expected input of b64Key to be a base64 String')
+      if (typeof key !== 'string') {
+        throw new TypeError('Expected input of key to be a Base64 String')
       }
 
       if (typeof options.name !== 'string') {
@@ -909,7 +909,7 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of options.name is not a valid algorithm name')
       }
 
-      const abKey = self.base64ToArrayBuffer(b64Key)
+      const abKey = self.base64ToArrayBuffer(key)
 
       cryptoApi.importKey(
         options.type,
@@ -925,15 +925,15 @@ export default class OpenCrypto {
     })
   }
 
-   /**
-    * Method that generates asymmetric RSA-OAEP key pair
-    * @param {Integer} modulusLength default: "2048"
-    * @param {String} hash default: "SHA-512"
-    * @param {String} paddingScheme default: "RSA-OAEP"
-    * @param {Array} usages default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']"
-    * @param {Boolean} isExtractable default: "true"
-    */
-   getRSAKeyPair (modulusLength, hash, paddingScheme, usages, isExtractable) {
+  /**
+   * Method that generates asymmetric RSA-OAEP key pair
+   * @param {Integer} modulusLength default: "2048"
+   * @param {String} hash default: "SHA-512"
+   * @param {String} paddingScheme default: "RSA-OAEP"
+   * @param {Array} usages default: "['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']"
+   * @param {Boolean} isExtractable default: "true"
+   */
+  getRSAKeyPair (modulusLength, hash, paddingScheme, usages, isExtractable) {
     modulusLength = (typeof modulusLength !== 'undefined') ? modulusLength : 2048
     hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     paddingScheme = (typeof paddingScheme !== 'undefined') ? paddingScheme : 'RSA-OAEP'
@@ -981,9 +981,9 @@ export default class OpenCrypto {
   /**
    * Method that encrypts data using asymmetric encryption
    * @param {CryptoKey} publicKey default: "undefined"
-   * @param {ArrayBuffer} dataAb default: "undefined"
+   * @param {ArrayBuffer} data default: "undefined"
    */
-   rsaEncrypt (publicKey, dataAb) {
+  rsaEncrypt (publicKey, data) {
     const self = this
 
     return new Promise((resolve, reject) => {
@@ -991,8 +991,8 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
-      if (typeof dataAb !== 'object') {
-        throw new TypeError('Expected input of dataAb to be an ArrayBuffer')
+      if (typeof data !== 'object') {
+        throw new TypeError('Expected input of data to be an ArrayBuffer')
       }
 
       cryptoApi.encrypt(
@@ -1000,7 +1000,7 @@ export default class OpenCrypto {
           name: 'RSA-OAEP'
         },
         publicKey,
-        dataAb
+        data
       ).then(encryptedDataAb => {
         const encryptedDatab64 = self.arrayBufferToBase64(encryptedDataAb)
         resolve(encryptedDatab64)
@@ -1024,7 +1024,7 @@ export default class OpenCrypto {
       }
 
       if (typeof encryptedData !== 'string') {
-        throw new TypeError('Expected input of encryptedData to be a base64 String')
+        throw new TypeError('Expected input of encryptedData to be a Base64 String')
       }
 
       const encryptedDataAb = self.base64ToArrayBuffer(encryptedData)
@@ -1217,7 +1217,7 @@ export default class OpenCrypto {
 
     return new Promise((resolve, reject) => {
       if (typeof encryptedPrivateKey !== 'string') {
-        throw new TypeError('Expected input of encryptedPrivateKey to be a base64 String')
+        throw new TypeError('Expected input of encryptedPrivateKey to be a Base64 String')
       }
 
       if (typeof passphrase !== 'string') {
@@ -1344,8 +1344,8 @@ export default class OpenCrypto {
 
   /**
    * Method that performs ECDH key agreement
-   * @param {CryptoKey} publicKey default: "undefined"
    * @param {CryptoKey} privateKey default: "undefined"
+   * @param {CryptoKey} publicKey default: "undefined"
    * @param {Object} options default: "{ bitLength: 256, hkdfHash: 'SHA-512', hkdfSalt: "new UInt8Array()", hkdfInfo: "new UInt8Array()", cipher: 'AES-GCM', length: 256, usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
    */
   keyAgreement (privateKey, publicKey, options) {
@@ -1445,6 +1445,54 @@ export default class OpenCrypto {
         }).catch(err => {
           reject(err)
         })
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
+
+  /**
+   * Method that generates symmetric/shared key for AES encryption
+   * @param {Integer} length default: "256"
+   * @param {Object} options default: "{ cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+   */
+  getSharedKey (length, options) {
+    length = (typeof length !== 'undefined') ? length : 256
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.cipher = (typeof options.cipher !== 'undefined') ? options.cipher : 'AES-GCM'
+    options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+    options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+
+    return new Promise((resolve, reject) => {
+      if (typeof length !== 'number') {
+        throw new TypeError('Expected input of length to be a Number')
+      }
+
+      if (typeof options.cipher !== 'string') {
+        throw new TypeError('Expected input of options.cipher expected to be a String')
+      }
+
+      if (typeof options.usages !== 'object') {
+        throw new TypeError('Expected input of options.usages to be an Array')
+      }
+
+      if (typeof options.isExtractable !== 'boolean') {
+        throw new TypeError('Expected input of options.isExtractable expected to be a Boolean')
+      }
+
+      cryptoApi.generateKey(
+        {
+          name: options.cipher,
+          length: length
+        },
+        options.isExtractable,
+        options.usages
+      ).then(sharedKey => {
+        resolve(sharedKey)
       }).catch(err => {
         reject(err)
       })
@@ -1559,7 +1607,7 @@ export default class OpenCrypto {
       }
 
       if (typeof encryptedKey !== 'string') {
-        throw new TypeError('Expected input of encryptedKey to be a base64 String')
+        throw new TypeError('Expected input of encryptedKey to be a Base64 String')
       }
 
       if (typeof options.name !== 'string') {
@@ -1733,147 +1781,6 @@ export default class OpenCrypto {
   }
 
   /**
-   * Method that generates signature of data using ECDSA or RSA-PSS
-   * @param {CryptoKey} privateKey default: "undefined"
-   * @param {ArrayBuffer} dataAb default: "undefined"
-   * @param {Object} options default: depends on algorithm below
-   * -- ECDSA: { hash: 'SHA-512' }
-   * -- RSA-PSS: { saltLength: 128 }
-   */
-  sign (privateKey, dataAb, options) {
-    const self = this
-
-    if (typeof options === 'undefined') {
-      options = {}
-    }
-
-    return new Promise((resolve, reject) => {
-      if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
-        throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
-      }
-
-      if (typeof dataAb !== 'object') {
-        throw new TypeError('Expected input of dataAb to be an ArrayBuffer')
-      }
-
-      if (privateKey.algorithm.name === 'ECDSA') {
-        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
-
-        if (typeof options.hash !== 'string') {
-          throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        cryptoApi.sign(
-          {
-            name: 'ECDSA',
-            hash: { name: options.hash }
-          },
-          privateKey,
-          dataAb
-        ).then(signatureAb => {
-          const signatureB64 = self.arrayBufferToBase64(signatureAb)
-          resolve(signatureB64)
-        }).catch(err => {
-          reject(err)
-        })
-      } else if (privateKey.algorithm.name === 'RSA-PSS') {
-        options.saltLength = (typeof options.saltLength !== 'undefined') ? options.saltLength : 128
-
-        if (typeof options.saltLength !== 'number') {
-          throw new TypeError('Expected input of options.saltLength to be a Number')
-        }
-
-        cryptoApi.sign(
-          {
-            name: 'RSA-PSS',
-            saltLength: options.saltLength
-          },
-          privateKey,
-          dataAb
-        ).then(signatureAb => {
-          const signatureB64 = self.arrayBufferToBase64(signatureAb)
-          resolve(signatureB64)
-        }).catch(err => {
-          reject(err)
-        })
-      } else {
-        throw new TypeError('Expected input of privateKey is not a valid private key')
-      }
-    })
-  }
-
-  /**
-   * Method that verifies data signature using ECDSA or RSA-PSS
-   * @param {CryptoKey} publicKey default: "undefined"
-   * @param {ArrayBuffer} data default: "undefined"
-   * @param {String} signature default: "undefined"
-   * @param {Object} options default: depends on algorithm below
-   * -- ECDSA: { hash: 'SHA-512' }
-   * -- RSA-PSS: { saltLength: 128 }
-   */
-  verify (publicKey, data, signature, options) {
-    const self = this
-
-    if (typeof options === 'undefined') {
-      options = {}
-    }
-
-    return new Promise((resolve, reject) => {
-      if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
-        throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
-      }
-
-      if (typeof data !== 'object') {
-        throw new TypeError('Expected input of data to be an ArrayBuffer')
-      }
-
-      if (typeof signature !== 'string') {
-        throw new TypeError('Expected input of signature to be a base64 String')
-      }
-      
-      const signatureAb = self.base64ToArrayBuffer(signature)
-
-      if (publicKey.algorithm.name === 'ECDSA') {
-        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
-
-        if (typeof options.hash !== 'string') {
-          throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        cryptoApi.verify(
-          {
-            name: 'ECDSA',
-            hash: { name: options.hash }
-          },
-          publicKey,
-          signatureAb,
-          data
-        ).then(isValid => {
-          resolve(isValid)
-        }).catch(err => {
-          reject(err)
-        })
-      } else if (publicKey.algorithm.name === 'RSA-PSS') {
-        cryptoApi.verify(
-          {
-            name: 'RSA-PSS',
-            saltLength: 128
-          },
-          publicKey,
-          signatureAb,
-          data
-        ).then(isValid => {
-          resolve(isValid)
-        }).catch(err => {
-          reject(err)
-        })
-      } else {
-        throw new TypeError('Expected input of publicKey is not a valid public key')
-      }
-    })
-  }
-
-  /**
    * Method that generates key signature using ECDSA or RSA-PSS
    * @param {CryptoKey} privateKey default: "undefined"
    * @param {CryptoKey} key default: "undefined"
@@ -1881,7 +1788,7 @@ export default class OpenCrypto {
    * -- ECDSA: { hash: 'SHA-512' }
    * -- RSA-PSS: { saltLength: 128 }
    */
-   signKey (privateKey, key, options) {
+  signKey (privateKey, key, options) {
     const self = this
 
     if (typeof options === 'undefined') {
@@ -1976,7 +1883,7 @@ export default class OpenCrypto {
       }
 
       if (typeof signature !== 'string') {
-        throw new TypeError('Expected input of signature to be a base64 String')
+        throw new TypeError('Expected input of signature to be a Base64 String')
       }
       
       const signatureAb = self.base64ToArrayBuffer(signature)
@@ -2029,50 +1936,143 @@ export default class OpenCrypto {
   }
 
   /**
-   * Method that generates symmetric/shared key for AES encryption
-   * @param {Integer} length default: "256"
-   * @param {Object} options default: "{ cipher: 'AES-GCM', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }"
+   * Method that generates signature of data using ECDSA or RSA-PSS
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {ArrayBuffer} data default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
    */
-  getSharedKey (length, options) {
-    length = (typeof length !== 'undefined') ? length : 256
+  sign (privateKey, data, options) {
+    const self = this
 
     if (typeof options === 'undefined') {
       options = {}
     }
 
-    options.cipher = (typeof options.cipher !== 'undefined') ? options.cipher : 'AES-GCM'
-    options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
-    options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+    return new Promise((resolve, reject) => {
+      if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
+        throw new TypeError('Expected input of privateKey to be a CryptoKey Object of type private')
+      }
+
+      if (typeof data !== 'object') {
+        throw new TypeError('Expected input of data to be an ArrayBuffer')
+      }
+
+      if (privateKey.algorithm.name === 'ECDSA') {
+        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
+
+        if (typeof options.hash !== 'string') {
+          throw new TypeError('Expected input of options.hash to be a String')
+        }
+
+        cryptoApi.sign(
+          {
+            name: 'ECDSA',
+            hash: { name: options.hash }
+          },
+          privateKey,
+          data
+        ).then(signatureAb => {
+          const signatureB64 = self.arrayBufferToBase64(signatureAb)
+          resolve(signatureB64)
+        }).catch(err => {
+          reject(err)
+        })
+      } else if (privateKey.algorithm.name === 'RSA-PSS') {
+        options.saltLength = (typeof options.saltLength !== 'undefined') ? options.saltLength : 128
+
+        if (typeof options.saltLength !== 'number') {
+          throw new TypeError('Expected input of options.saltLength to be a Number')
+        }
+
+        cryptoApi.sign(
+          {
+            name: 'RSA-PSS',
+            saltLength: options.saltLength
+          },
+          privateKey,
+          data
+        ).then(signatureAb => {
+          const signatureB64 = self.arrayBufferToBase64(signatureAb)
+          resolve(signatureB64)
+        }).catch(err => {
+          reject(err)
+        })
+      } else {
+        throw new TypeError('Expected input of privateKey is not a valid private key')
+      }
+    })
+  }
+
+  /**
+   * Method that verifies data signature using ECDSA or RSA-PSS
+   * @param {CryptoKey} publicKey default: "undefined"
+   * @param {ArrayBuffer} data default: "undefined"
+   * @param {String} signature default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDSA: { hash: 'SHA-512' }
+   * -- RSA-PSS: { saltLength: 128 }
+   */
+  verify (publicKey, data, signature, options) {
+    const self = this
+
+    if (typeof options === 'undefined') {
+      options = {}
+    }
 
     return new Promise((resolve, reject) => {
-      if (typeof length !== 'number') {
-        throw new TypeError('Expected input of length to be a Number')
+      if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
+        throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
-      if (typeof options.cipher !== 'string') {
-        throw new TypeError('Expected input of options.cipher expected to be a String')
+      if (typeof data !== 'object') {
+        throw new TypeError('Expected input of data to be an ArrayBuffer')
       }
 
-      if (typeof options.usages !== 'object') {
-        throw new TypeError('Expected input of options.usages to be an Array')
+      if (typeof signature !== 'string') {
+        throw new TypeError('Expected input of signature to be a Base64 String')
       }
+      
+      const signatureAb = self.base64ToArrayBuffer(signature)
 
-      if (typeof options.isExtractable !== 'boolean') {
-        throw new TypeError('Expected input of options.isExtractable expected to be a Boolean')
+      if (publicKey.algorithm.name === 'ECDSA') {
+        options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
+
+        if (typeof options.hash !== 'string') {
+          throw new TypeError('Expected input of options.hash to be a String')
+        }
+
+        cryptoApi.verify(
+          {
+            name: 'ECDSA',
+            hash: { name: options.hash }
+          },
+          publicKey,
+          signatureAb,
+          data
+        ).then(isValid => {
+          resolve(isValid)
+        }).catch(err => {
+          reject(err)
+        })
+      } else if (publicKey.algorithm.name === 'RSA-PSS') {
+        cryptoApi.verify(
+          {
+            name: 'RSA-PSS',
+            saltLength: 128
+          },
+          publicKey,
+          signatureAb,
+          data
+        ).then(isValid => {
+          resolve(isValid)
+        }).catch(err => {
+          reject(err)
+        })
+      } else {
+        throw new TypeError('Expected input of publicKey is not a valid public key')
       }
-
-      cryptoApi.generateKey(
-        {
-          name: options.cipher,
-          length: length
-        },
-        options.isExtractable,
-        options.usages
-      ).then(sharedKey => {
-        resolve(sharedKey)
-      }).catch(err => {
-        reject(err)
-      })
     })
   }
 
