@@ -1058,10 +1058,10 @@ export default class OpenCrypto {
    * Method that retrieves public key from private key
    * @param {CryptoKey} privateKey default: "undefined"
    * @param {Object} options default: depends on algorithm below
-   * -- ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
-   * -- ECDSA: { name: 'ECDSA', usages: ['sign', 'verify'], isExtractable: true }
-   * -- RSA-OAEP: { name: 'RSA-OAEP', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
-   * -- RSA-PSS: { name: 'RSA-PSS', usages: ['sign', 'verify'], isExtractable: true }
+   * -- ECDH: { usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+   * -- ECDSA: { usages: ['sign', 'verify'], isExtractable: true }
+   * -- RSA-OAEP: { usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { usages: ['sign', 'verify'], isExtractable: true }
    */
   getPublicKey (privateKey, options) {
     if (typeof options === 'undefined') {
