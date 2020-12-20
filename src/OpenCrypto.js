@@ -525,18 +525,14 @@ export default class OpenCrypto {
 
         if (options.name === 'ECDH') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else if (options.name === 'ECDSA') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else {
           throw new TypeError('Expected input of options.name is not a valid algorithm name')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.name = options.name
@@ -555,18 +551,14 @@ export default class OpenCrypto {
 
         if (options.name === 'RSA-OAEP') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else if (options.name === 'RSA-PSS') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else {
           throw new TypeError('Expected input of options.name is not a valid algorithm name')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.name = options.name
@@ -670,18 +662,14 @@ export default class OpenCrypto {
 
         if (options.name === 'ECDH') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : []
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else if (options.name === 'ECDSA') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['verify']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else {
           throw new TypeError('Expected input of options.name is not a valid algorithm name')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.name = options.name
@@ -700,18 +688,14 @@ export default class OpenCrypto {
 
         if (options.name === 'RSA-OAEP') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'wrapKey']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else if (options.name === 'RSA-PSS') {
           options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['verify']
-
-          if (typeof options.usages !== 'object') {
-            throw new TypeError('Expected input of options.usages to be an Array')
-          }
         } else {
           throw new TypeError('Expected input of options.name is not a valid algorithm name')
+        }
+
+        if (typeof options.usages !== 'object') {
+          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.name = options.name
@@ -820,32 +804,16 @@ export default class OpenCrypto {
         options.length = (typeof options.length !== 'undefined') ? options.length : 256
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.length !== 'number') {
           throw new TypeError('Expected input of options.length to be a Number')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
       } else if (options.name === 'ECDH') {
         options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.namedCurve = options.namedCurve
@@ -854,16 +822,8 @@ export default class OpenCrypto {
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.namedCurve = options.namedCurve
@@ -872,16 +832,8 @@ export default class OpenCrypto {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.hash = {}
@@ -891,22 +843,22 @@ export default class OpenCrypto {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.hash = {}
         keyOptions.hash.name = options.hash
       } else {
         throw new TypeError('Expected input of options.name is not a valid algorithm name')
+      }
+
+      if (typeof options.type !== 'string') {
+        throw new TypeError('Expected input of options.type to be a String')
+      }
+
+      if (typeof options.usages !== 'object') {
+        throw new TypeError('Expected input of options.usages to be an Array')
       }
 
       const abKey = self.base64ToArrayBuffer(key)
@@ -937,7 +889,6 @@ export default class OpenCrypto {
     modulusLength = (typeof modulusLength !== 'undefined') ? modulusLength : 2048
     hash = (typeof hash !== 'undefined') ? hash : 'SHA-512'
     paddingScheme = (typeof paddingScheme !== 'undefined') ? paddingScheme : 'RSA-OAEP'
-    usages = (typeof usages !== 'undefined') ? usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
     isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
 
     return new Promise((resolve, reject) => {
@@ -953,12 +904,20 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of paddingScheme to be a String')
       }
 
-      if (typeof usages !== 'object') {
-        throw new TypeError('Expected input of usages to be an Array')
-      }
-
       if (typeof isExtractable !== 'boolean') {
         throw new TypeError('Expected input of isExtractable to be a Boolean')
+      }
+
+      if (paddingScheme === 'RSA-OAEP') {
+        usages = (typeof usages !== 'undefined') ? usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
+      } else if (paddingScheme === 'RSA-PSS') {
+        usages = (typeof usages !== 'undefined') ? usages : ['sign', 'verify']
+      } else {
+        throw new TypeError('Expected input of paddingScheme is not a valid padding scheme')
+      }
+
+      if (typeof usages !== 'object') {
+        throw new TypeError('Expected input of usages to be an Array')
       }
 
       cryptoApi.generateKey(
@@ -1002,8 +961,8 @@ export default class OpenCrypto {
         publicKey,
         data
       ).then(encryptedDataAb => {
-        const encryptedDatab64 = self.arrayBufferToBase64(encryptedDataAb)
-        resolve(encryptedDatab64)
+        const encryptedDataB64 = self.arrayBufferToBase64(encryptedDataAb)
+        resolve(encryptedDataB64)
       }).catch(err => {
         reject(err)
       })
@@ -1053,7 +1012,6 @@ export default class OpenCrypto {
   getECKeyPair (curve, type, usages, isExtractable) {
     curve = (typeof curve !== 'undefined') ? curve : 'P-256'
     type = (typeof type !== 'undefined') ? type : 'ECDH'
-    usages = (typeof usages !== 'undefined') ? usages : ['deriveKey', 'deriveBits']
     isExtractable = (typeof isExtractable !== 'undefined') ? isExtractable : true
 
     return new Promise((resolve, reject) => {
@@ -1065,12 +1023,20 @@ export default class OpenCrypto {
         throw new TypeError('Expected input of type to be a String')
       }
 
-      if (typeof usages !== 'object') {
-        throw new TypeError('Expected input of usages to be an Array')
-      }
-
       if (typeof isExtractable !== 'boolean') {
         throw new TypeError('Expected input of isExtractable to be a Boolean')
+      }
+
+      if (type === 'ECDH') {
+        usages = (typeof usages !== 'undefined') ? usages : ['deriveKey', 'deriveBits']
+      } else if (type === 'ECDSA') {
+        usages = (typeof usages !== 'undefined') ? usages : ['sign', 'verify']
+      } else {
+        throw new TypeError('Expected input of type is not a valid algorithm type')
+      }
+
+      if (typeof usages !== 'object') {
+        throw new TypeError('Expected input of usages to be an Array')
       }
 
       cryptoApi.generateKey(
@@ -1082,6 +1048,117 @@ export default class OpenCrypto {
         usages
       ).then(keyPair => {
         resolve(keyPair)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }
+
+  /**
+   * Method that retrieves public key from private key
+   * @param {CryptoKey} privateKey default: "undefined"
+   * @param {Object} options default: depends on algorithm below
+   * -- ECDH: { name: 'ECDH', usages: ['deriveKey', 'deriveBits'], isExtractable: true }
+   * -- ECDSA: { name: 'ECDSA', usages: ['sign', 'verify'], isExtractable: true }
+   * -- RSA-OAEP: { name: 'RSA-OAEP', usages: ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], isExtractable: true }
+   * -- RSA-PSS: { name: 'RSA-PSS', usages: ['sign', 'verify'], isExtractable: true }
+   */
+  getPublicKey (privateKey, options) {
+    if (typeof options === 'undefined') {
+      options = {}
+    }
+
+    options.isExtractable = (typeof options.isExtractable !== 'undefined') ? options.isExtractable : true
+
+    return new Promise((resolve, reject) => {
+      if (Object.prototype.toString.call(privateKey) !== '[object CryptoKey]' && privateKey.type !== 'private') {
+        throw new TypeError('Expected input of privateKey must be a CryptoKey Object of type private')
+      }
+
+      if (typeof options.isExtractable !== 'boolean') {
+        throw new TypeError('Expected input of options.isExtractable to be a Boolean')
+      }
+
+      cryptoApi.exportKey('jwk', privateKey).then(jwkKey => {
+        const keyOptions = {}
+        keyOptions.name = privateKey.algorithm.name
+
+        switch (privateKey.algorithm.name) {
+          case 'ECDH' :
+            delete jwkKey.d
+            jwkKey.key_ops = []
+
+            options.usages = (typeof options.usages !== 'undefined') ? options.usages : []
+
+            if (typeof options.usages !== 'object') {
+              throw new TypeError('Expected input of options.usages to be an Array')
+            }
+
+            keyOptions.namedCurve = privateKey.algorithm.namedCurve
+            break
+          case 'ECDSA' :
+            delete jwkKey.d
+            jwkKey.key_ops = ['verify']
+
+            options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['verify']
+
+            if (typeof options.usages !== 'object') {
+              throw new TypeError('Expected input of options.usages to be an Array')
+            }
+
+            keyOptions.namedCurve = privateKey.algorithm.namedCurve
+            break
+          case 'RSA-OAEP' :
+            delete jwkKey.d
+            delete jwkKey.dp
+            delete jwkKey.dq
+            delete jwkKey.p
+            delete jwkKey.q
+            delete jwkKey.qi
+            jwkKey.key_ops = ['encrypt', 'wrapKey']
+
+            options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'wrapKey']
+
+            if (typeof options.usages !== 'object') {
+              throw new TypeError('Expected input of options.usages to be an Array')
+            }
+
+            keyOptions.hash = {}
+            keyOptions.hash.name = privateKey.algorithm.hash.name
+            break
+          case 'RSA-PSS' :
+            delete jwkKey.d
+            delete jwkKey.dp
+            delete jwkKey.dq
+            delete jwkKey.p
+            delete jwkKey.q
+            delete jwkKey.qi
+            jwkKey.key_ops = ['verify']
+
+            options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['verify']
+
+            if (typeof options.usages !== 'object') {
+              throw new TypeError('Expected input of options.usages to be an Array')
+            }
+
+            keyOptions.hash = {}
+            keyOptions.hash.name = privateKey.algorithm.hash.name
+            break
+          default :
+            throw new TypeError('Expected input of privateKey is not a valid private key')
+        }
+
+        cryptoApi.importKey(
+          'jwk',
+          jwkKey,
+          keyOptions,
+          options.isExtractable,
+          options.usages
+        ).then(publicKey => {
+          resolve(publicKey)
+        }).catch(err => {
+          reject(err)
+        })
       }).catch(err => {
         reject(err)
       })
@@ -1574,7 +1651,7 @@ export default class OpenCrypto {
           reject(err)
         })
       } else {
-        throw new TypeError('Expected input of wrappingKey is not a supported wrappingKey')
+        throw new TypeError('Expected input of wrappingKey is not a supported key')
       }
     })
   }
@@ -1626,32 +1703,16 @@ export default class OpenCrypto {
         options.length = (typeof options.length !== 'undefined') ? options.length : 256
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.length !== 'number') {
           throw new TypeError('Expected input of options.length to be a Number')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
       } else if (options.name === 'ECDH') {
         options.type = (typeof options.type !== 'undefined') ? options.type : 'pkcs8'
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['deriveKey', 'deriveBits']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.namedCurve = options.namedCurve
@@ -1660,16 +1721,8 @@ export default class OpenCrypto {
         options.namedCurve = (typeof options.namedCurve !== 'undefined') ? options.namedCurve : 'P-256'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.namedCurve !== 'string') {
           throw new TypeError('Expected input of options.namedCurve to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.namedCurve = options.namedCurve
@@ -1678,16 +1731,8 @@ export default class OpenCrypto {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['decrypt', 'unwrapKey']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.hash = {}
@@ -1697,22 +1742,22 @@ export default class OpenCrypto {
         options.hash = (typeof options.hash !== 'undefined') ? options.hash : 'SHA-512'
         options.usages = (typeof options.usages !== 'undefined') ? options.usages : ['sign']
 
-        if (typeof options.type !== 'string') {
-          throw new TypeError('Expected input of options.type to be a String')
-        }
-
         if (typeof options.hash !== 'string') {
           throw new TypeError('Expected input of options.hash to be a String')
-        }
-
-        if (typeof options.usages !== 'object') {
-          throw new TypeError('Expected input of options.usages to be an Array')
         }
 
         keyOptions.hash = {}
         keyOptions.hash.name = options.hash
       } else {
         throw new TypeError('Expected input of options.name is not a valid algorithm name')
+      }
+
+      if (typeof options.type !== 'string') {
+        throw new TypeError('Expected input of options.type to be a String')
+      }
+
+      if (typeof options.usages !== 'object') {
+        throw new TypeError('Expected input of options.usages to be an Array')
       }
 
       if (unwrappingKey.type === 'secret') {
@@ -1775,7 +1820,7 @@ export default class OpenCrypto {
           reject(err)
         })
       } else {
-        throw new TypeError('Expected input of unwrappingKey is not a supported unwrappingKey')
+        throw new TypeError('Expected input of unwrappingKey is not a supported key')
       }
     })
   }
