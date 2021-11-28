@@ -335,7 +335,7 @@ type Base64 = string;
 type Hexadecimal = string;
 
 type Asn1Cipher = "AES-GCM" | "AES-CBC" | "AES-CFB";
-type Asn1Hash = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-612";
+type Asn1Hash = "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512";
 
 type PrivateKeyCryptoOptions =
   | ECDHPrivateOptions
