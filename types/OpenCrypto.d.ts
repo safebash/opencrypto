@@ -131,7 +131,7 @@ export default class OpenCrypto {
    */
   getRSAKeyPair(
     /** @default 2048 */
-    modulusLength: number,
+    modulusLength?: number,
 
     /** @default 'SHA-512' */
     hash?: Asn1Hash,
