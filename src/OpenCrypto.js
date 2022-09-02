@@ -590,7 +590,7 @@ export default class OpenCrypto {
     const self = this
 
     return new Promise((resolve, reject) => {
-      if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' && publicKey.type !== 'public') {
+      if (Object.prototype.toString.call(publicKey) !== '[object CryptoKey]' || publicKey.type !== 'public') {
         throw new TypeError('Expected input of publicKey to be a CryptoKey Object of type public')
       }
 
